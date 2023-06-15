@@ -1,9 +1,0 @@
-requests
-bs4
-numpy
-pandas matplotlib
-selenium 
-seaborn 
-plotly
-dash
-streamlit
