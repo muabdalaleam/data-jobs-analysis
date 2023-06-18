@@ -1,0 +1,10 @@
+requests
+bs4
+numpy
+pandas 
+lxml
+matplotlib
+seaborn 
+plotly
+dash
+streamlit
