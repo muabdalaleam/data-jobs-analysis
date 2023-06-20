@@ -1,7 +1,8 @@
 requests
 bs4
 numpy
-pandas 
+pandas
+scrapy
 lxml
 matplotlib
 seaborn 
