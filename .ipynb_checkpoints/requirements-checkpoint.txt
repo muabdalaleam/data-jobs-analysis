@@ -11,3 +11,4 @@ plotly
 html5lib
 dash
 streamlit
+cloudscraper
