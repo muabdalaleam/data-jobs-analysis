@@ -4,8 +4,10 @@ numpy
 pandas
 scrapy
 lxml
+webdriver_manager
 matplotlib
 seaborn 
 plotly
+html5lib
 dash
 streamlit
