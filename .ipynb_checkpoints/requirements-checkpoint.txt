@@ -11,4 +11,4 @@ plotly
 html5lib
 dash
 streamlit
-cloudscraper
+python-linkedin-v2
