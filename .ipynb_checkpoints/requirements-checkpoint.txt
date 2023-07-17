@@ -11,4 +11,4 @@ plotly
 html5lib
 dash
 streamlit
-python-linkedin-v2
+Scarpy
