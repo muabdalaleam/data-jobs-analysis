@@ -9,6 +9,7 @@ matplotlib
 shadow-useragent
 seaborn
 plotly
+pyarrow
 html5lib
 dash
 google
