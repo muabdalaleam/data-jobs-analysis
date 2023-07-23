@@ -4,9 +4,9 @@ numpy
 pandas
 scrapy
 lxml
-webdriver_manager
+webdriver-manager
 matplotlib
-shadow-useragent
+fake-useragent
 seaborn
 plotly
 pyarrow
