@@ -6,11 +6,11 @@ scrapy
 lxml
 webdriver_manager
 matplotlib
-seaborn 
+shadow-useragent
+seaborn
 plotly
 html5lib
 dash
-httpx
 google
 google-cloud-bigquery
 Scarpy
