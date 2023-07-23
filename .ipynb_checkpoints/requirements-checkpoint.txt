@@ -10,5 +10,7 @@ seaborn
 plotly
 html5lib
 dash
-streamlit
+httpx
+google
+google-cloud-bigquery
 Scarpy
