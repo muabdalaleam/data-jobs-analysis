@@ -8,15 +8,32 @@ the data again.
 """
 
 from google.cloud import bigquery
-import pandas
+import pandas as pd
 import os
 
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../credentials.json'
+dataset_id      :str  = 'data_jobs_analysis_db'
+project_id       :str  = 'data-jobs-analysis-db'
+credentials_path :str  = '../credentials.json'
 
-with open('../credentials.json', 'r') as f:
-    credentials = f.read()
+dataframes       :dict = {'linkedin_jobs': pd.read_csv('data/linckedin_jobs.csv'),
+                          'guru_profiles': pd.read_csv('data/guru_freelancers.csv'),
+                          'upwork_profiles': pd.read_csv('data/upwork_freelancers.csv')}
 
-client = bigquery.Client(credentials= credentials,  project= 'data-jobs-analysis-db')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 
+client = bigquery.Client(project     = project_id)
+
+for table_name, df in dataframes.items():
+    table_id = f"{project_id}.{dataset_id}.{table_name}"
+        
+    schema = [bigquery.SchemaField(name, df[name].dtype.name.lower()) for name in df.columns]
+
+    # Create or overwrite the table with the DataFrame data
+    job_config = bigquery.LoadJobConfig(schema=schema, write_disposition="WRITE_TRUNCATE")
+    job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
+    job.result()
+
+    print(f"DataFrame '{table_name}' uploaded as table '{table_id}' in BigQuery.")
+    
 # results = clie
 # print()
