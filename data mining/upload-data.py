@@ -11,7 +11,12 @@ from google.cloud import bigquery
 import pandas
 import os
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './credentials.json'
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../credentials.json'
 
+with open('../credentials.json', 'r') as f:
+    credentials = f.read()
 
-client = bigquery.Client(location="US", project= 'data-jobs-analysis-db')
+client = bigquery.Client(credentials= credentials,  project= 'data-jobs-analysis-db')
+
+# results = clie
+# print()
