@@ -15,4 +15,5 @@ dash
 google
 google-cloud-bigquery
 hsluv
+wordcloud 
 Scarpy
