@@ -10,6 +10,7 @@ fake-useragent
 seaborn
 plotly
 pyarrow
+texthero
 html5lib
 dash
 google
