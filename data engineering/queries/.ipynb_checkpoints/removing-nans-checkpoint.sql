@@ -1,4 +1,4 @@
-UPDATE `data-jobs-analysis-db.data_jobs_analysis_db.linkedin_jobs`
+UPDATE 'data-jobs-analysis-db.data_jobs_analysis_db.linkedin_jobs'
 SET
   reqierd_credential = IFNULL(reqierd_credential, 'Not Specified'),
   location_type = CASE
@@ -15,10 +15,10 @@ SET
                    ELSE 'Remote' -- We will set the Non-Specified location type to Remote
 
                  END
-WHERE (describtion IS NOT NULL) AND (listing_dates IS NULL);
+WHERE describtion IS NOT NULL;
 
 
-UPDATE `data-jobs-analysis-db.data_jobs_analysis_db.guru_profiles`
+UPDATE 'data-jobs-analysis-db.data_jobs_analysis_db.guru_profiles'
 SET
   feedback = IFNULL(feedback, '0%'),
   earnings_amount = CASE
