@@ -1,4 +1,5 @@
-UPDATE 'data-jobs-analysis-db.data_jobs_analysis_db.linkedin_jobs'
+-- ============================LinkedIn============================
+UPDATE `data-jobs-analysis-db.data_jobs_analysis_db.linkedin_jobs`
 SET
   reqierd_credential = IFNULL(reqierd_credential, 'Not Specified'),
   location_type = CASE
@@ -13,12 +14,12 @@ SET
                         (LOWER(describtion) LIKE '%in-person%') THEN 'From office'
 
                    ELSE 'Remote' -- We will set the Non-Specified location type to Remote
-
                  END
 WHERE describtion IS NOT NULL;
+-- ================================================================
 
-
-UPDATE 'data-jobs-analysis-db.data_jobs_analysis_db.guru_profiles'
+-- ==============================Guru==============================
+UPDATE `data-jobs-analysis-db.data_jobs_analysis_db.guru_profiles`
 SET
   feedback = IFNULL(feedback, '0%'),
   earnings_amount = CASE
@@ -26,5 +27,6 @@ SET
                           (earnings_amount = 'ID Verified') OR
                           (earnings_amount = 'Past Earnings') THEN '0'
                      ELSE earnings_amount
-                   END;
-
+                    END
+WHERE name IS NOT NULL;
+-- ================================================================
