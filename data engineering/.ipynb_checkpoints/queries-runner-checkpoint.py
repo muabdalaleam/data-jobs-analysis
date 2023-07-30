@@ -37,6 +37,6 @@ def run_queries(query_path: str) -> None:
                 print(f'Error message: {str(e)}')
 
 
-# run_queries('queries/removing-nans.sql')
-# run_queries('queries/wrong-dtypes-fix.sql')
+run_queries('queries/removing-nans.sql')
+run_queries('queries/wrong-dtypes-fix.sql')
 run_queries('queries/removing-useless-cols.sql')
