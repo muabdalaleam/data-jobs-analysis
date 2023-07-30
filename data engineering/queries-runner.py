@@ -20,7 +20,7 @@ def run_queries(query_path: str) -> None:
     print(f'\nStarted excuting {query_path.split("/")[-1]} query.')
     
     with open(query_path, 'r') as sql_file:
-        queries = sql_file.read().split(';')[-1]
+        queries = sql_file.read().split(';')[:-1]
 
     client = bigquery.Client()
 
@@ -31,12 +31,12 @@ def run_queries(query_path: str) -> None:
                 job_config.use_legacy_sql = False
                 query_job = client.query(query, job_config=job_config)
                 results = query_job.result()
-                print(f'Query {i} in the current queries file executed succesfully.')
+                print(f'Query {i + 1} in the current queries file executed succesfully.')
 
             except Exception as e:
                 print(f'Error message: {str(e)}')
 
 
-run_queries('queries/removing-nans.sql')
-run_queries('queries/wrong-dtypes-fix.sql')
-run_queries('queries/removing-useless-col.sql')
+# run_queries('queries/removing-nans.sql')
+# run_queries('queries/wrong-dtypes-fix.sql')
+run_queries('queries/removing-useless-cols.sql')
