@@ -13,6 +13,7 @@ pyarrow
 html5lib
 dash
 google
+scrapy
 google-cloud-bigquery
 hsluv
 wordcloud 
