@@ -18,19 +18,20 @@ credentials_path :str = '../credentials.json'
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 
 dataframes = {
-    'linkedin_jobs'   : pd.read_csv('data/linckedin_jobs.csv'),
-    'guru_profiles'   : pd.read_csv('data/guru_freelancers.csv'),
-    'upwork_profiles' : pd.read_csv('data/upwork_freelancers.csv')}
+    'linkedin_jobs'   : pd.read_parquet('data/linckedin_jobs.parquet'),
+    'guru_profiles'   : pd.read_parquet('data/guru_freelancers.parquet'),
+    'upwork_profiles' : pd.read_parquet('data/upwork_freelancers.parquet')}
 
 
 
-client = bigquery.Client(project=project_id)
+client = bigquery.Client(project= project_id)
 
 for table_name, df in dataframes.items():
-    table_id = f'{project_id}.{dataset_id}.{table_name}'
+
+    table_id   = f'{project_id}.{dataset_id}.{table_name}'
 
     job_config = bigquery.LoadJobConfig(write_disposition= 'WRITE_TRUNCATE')
-    job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
+    job        = client.load_table_from_dataframe(df, table_id, job_config=job_config)
+    
     job.result()
-
     print(f'DataFrame \'{table_name}\' uploaded as table \'{table_id}\' in BigQuery.')
