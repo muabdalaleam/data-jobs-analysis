@@ -18,9 +18,9 @@ credentials_path :str = '../credentials.json'
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 
 dataframes = {
-    'linkedin_jobs'   : pd.read_parquet('data/linckedin_jobs.parquet'),
-    'guru_profiles'   : pd.read_parquet('data/guru_freelancers.parquet'),
-    'upwork_profiles' : pd.read_parquet('data/upwork_freelancers.parquet')}
+    'linkedin_jobs'   : pd.read_csv('data/linckedin_jobs.csv'),
+    'guru_profiles'   : pd.read_csv('data/guru_freelancers.csv'),
+    'upwork_profiles' : pd.read_csv('data/upwork_freelancers.csv')}
 
 
 
