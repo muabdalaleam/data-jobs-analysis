@@ -15,7 +15,11 @@ SET
 
                    ELSE 'Remote' -- We will set the Non-Specified location type to Remote
                  END
-WHERE describtion IS NOT NULL;
+WHERE describtion IS NOT NULL OR describtion IS NULL;
+
+
+DELETE FROM `data-jobs-analysis-db.data_jobs_analysis_db.linkedin_jobs`
+WHERE describtion IS NULL;
 -- ================================================================
 
 -- ==============================Guru==============================
