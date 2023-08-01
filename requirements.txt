@@ -4,6 +4,7 @@ numpy
 pandas
 scrapy
 lxml
+pandasql 
 webdriver-manager
 matplotlib
 fake-useragent
