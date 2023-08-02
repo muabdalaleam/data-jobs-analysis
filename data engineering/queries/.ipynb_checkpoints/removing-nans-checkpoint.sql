@@ -35,3 +35,8 @@ SET
 WHERE name IS NOT NULL;
 -- ================================================================
 
+-- =============================Upwork=============================
+UPDATE `data-jobs-analysis-db.data_jobs_analysis_db.upwork_profiles`
+SET earnings_amount = IFNULL(earnings_amount, 0)
+WHERE name IS NOT NULL;
+-- ================================================================
