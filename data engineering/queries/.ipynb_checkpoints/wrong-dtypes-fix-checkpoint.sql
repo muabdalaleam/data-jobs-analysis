@@ -7,6 +7,7 @@ SELECT *,
     -- Collecting the numric data from the text data using REGEXP
     CASE
       WHEN earnings_amount LIKE '%K%' THEN CAST(REGEXP_REPLACE(earnings_amount, '[^0-9]', '') AS INT64) * 1000
+      WHEN earnings_amount LIKE '%M%' THEN CAST(REGEXP_REPLACE(earnings_amount, '[^0-9]', '') AS INT64) * 1000000 -- Million
       ELSE CAST(REGEXP_REPLACE(earnings_amount, '[^0-9]', '') AS INT64)
     END                                          AS earnings_amount_new,
       
