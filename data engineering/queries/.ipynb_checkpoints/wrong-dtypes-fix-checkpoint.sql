@@ -45,7 +45,7 @@ CREATE OR REPLACE TABLE `data-jobs-analysis-db.data_jobs_analysis_db.guru_profil
 AS
 SELECT *,
   STRUCT(
-    CAST(REGEXP_REPLACE(earnings_amount, '[^0-9]', '') AS INT64)   AS earnings_amount_new,
+    CAST(REGEXP_REPLACE(SUBSTRING(earnings_amount, 1, 10), '[^0-9]', '') AS INT64)   AS earnings_amount_new,
     CAST(REGEXP_REPLACE(hour_rate,       '[^0-9]', '') AS FLOAT64) AS hour_rate_new,
     CAST(REGEXP_REPLACE(feedback,        '[^0-9]', '') AS FLOAT64) AS feedback_new
 ) AS new_columns
