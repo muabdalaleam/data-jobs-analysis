@@ -6,6 +6,8 @@ scrapy
 lxml
 pandasql 
 webdriver-manager
+geopandas
+geoplot
 matplotlib
 fake-useragent
 seaborn
