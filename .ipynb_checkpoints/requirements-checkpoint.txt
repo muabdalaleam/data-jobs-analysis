@@ -20,5 +20,10 @@ google
 scrapy
 google-cloud-bigquery
 hsluv
+googlemaps
 wordcloud 
 Scarpy
+plotly-geo
+geopandas
+pyshp
+shapely
