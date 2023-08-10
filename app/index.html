@@ -8,35 +8,6 @@
 </head>
 
 <body>
-    <div id="chart"></div>
-    <script>
-        const PASSWORD = 'your-secret-password'; // Set your secret password here
-    
-        // D3.js code to create a bar chart
-        function fetchDataAndCreateChart(query) {
-            const queryParams = new URLSearchParams({
-                query: query,
-                password: PASSWORD,
-            });
-    
-            d3.json(`/query?${queryParams.toString()}`)
-                .then(data => {
-                    // Your D3.js visualization code here
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
-        }
-    
-        // Define your queries
-        const query1 = 'SELECT * FROM `your-project-id.your-dataset-id.linkedin_jobs` LIMIT 10';
-        const query2 = 'SELECT * FROM `your-project-id.your-dataset-id.upwork_profiles` LIMIT 10';
-        const query3 = 'SELECT * FROM `your-project-id.your-dataset-id.guru_profiles` LIMIT 10';
-    
-        // Call the function for each query
-        fetchDataAndCreateChart(query1);
-        fetchDataAndCreateChart(query2);
-        fetchDataAndCreateChart(query3);
-    </script>    
+    <canvas id="chart"></canvas>
 </body>
 </html>
