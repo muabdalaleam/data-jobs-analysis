@@ -18,7 +18,7 @@ body {
     --secondry-2: #5cd3f7;
     --font-size: 20px;
     --font-color: white;
-    --shadow: rgba(0, 0, 0, 0.15);
+    --shadow: rgba(43, 43, 43, 0.381);
     --transition: 0.25s;
 }
 
@@ -77,25 +77,31 @@ body {
     align-items: left;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px; /* Adjust the gap between grid items */
-    padding: 23px; /* Add padding to the entire grid container */
+    padding: 23px;
 }
 
 .grid-item {
     background-color: var(--card);
-    padding: 120px; /* Add padding to each grid item */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
     border-radius: 15px;
-    box-shadow: 0 2px 4px var(--shadow);
+    box-shadow: 0 4px 6px var(--shadow);
 }
 
 .transparent-card {
     background-color: var(--bg);
-    padding: 120px;
+    padding: 10px;
     border-radius: 0px;
     box-shadow: 0 0px 0px var(--bg);
 }
 
 
-
+canvas {
+    width: 380px;
+    height: 200px;
+}
 
 body::-webkit-scrollbar {
     width: 1em;

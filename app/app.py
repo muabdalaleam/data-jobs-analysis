@@ -10,7 +10,8 @@ client = bigquery.Client()
 @app.route('/')
 def index():
 
-    query = """
+    # ------------------Salary Per Job title data visualizaton-----------------
+    salary_per_job_title_query = """
         SELECT AVG(salary) AS avg_salary,
             country,
             job_title
@@ -20,14 +21,20 @@ def index():
         ORDER BY avg_salary DESC;''')
     """
 
-    # query2 = """
-    #     SELECT ...
-    # """
+    salary_per_job_title_data = execute_query(salary_per_job_title_query)
+    # --------------------------------------------------------------------------
 
-    data = execute_query(query)
-    # data2 = execute_query(query2)
 
-    return render_template('index.html', data1= data) # , data2=data2
+    # ---------------Top 10 Paid & requird skills data visualization------------
+    top_paid_and_reqierd_skills_query = """
+
+    """
+
+    top_paid_and_reqierd_skills_data = execute_query(top_paid_and_reqierd_skills_query)
+    # --------------------------------------------------------------------------
+
+    return render_template('index.html',salary_per_job_title= salary_per_job_title_data,
+                                        top_paid_and_reqierd_skills= top_paid_and_reqierd_skills_data)
 
 
 def execute_query(query):
