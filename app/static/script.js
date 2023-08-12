@@ -16,6 +16,7 @@ const api_url = "/data/salary_per_job_title_data";
 async function plotSalaryPerJobTitle() {
 
     const response = await fetch(api_url);
+    console.log(response)
     const data = await response.json();
 
 
@@ -36,21 +37,36 @@ async function plotSalaryPerJobTitle() {
         .nice()
         .range([height, 0]);
 
-    const bars = svg.selectAll(".bar")
-        .data(data.avg_salary)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", (d, i) => xScale(data.job_title[i]))
-        .attr("width", xScale.bandwidth())
-        .attr("y", d => yScale(d))
-        .attr("height", d => height - yScale(d))
-        .attr("fill", (d, i) => d == data.avg_salary[0] ? main_color : "gray");
+const yTicks = yScale.ticks();
 
+svg.selectAll(".circle-group")
+    .data(data.avg_salary)
+    .enter()
+    .append("g")
+    .attr("class", "circle-group")
+    .attr("transform", (d, i) => `translate(${xScale(data.job_title[i]) + xScale.bandwidth() / 2}, ${yScale(data.avg_salary[i])})`)
+    // .each(function(d, i) {
+const group = d3.select(this)
+
+        // let numCircles = Math.ceil(yScale(yTicks[0]) - yScale(data.avg_salary[i]));
+        // numCircles = Math.ceil(numCircles * 0.05); // Down scaling the count of circles so it's more readable
+
+        // console.log(numCircles);
+
+        // for (let j = 0; j < numCircles; j++) {
+        //     let circleY = (j * 20); // Adjusted the calculation for y-coordinate
+
+        //     group.append("circle")
+        //         .attr("cx", 0)
+        //         .attr("cy", circleY)
+        //         .attr("r", 10)
+        //         .style("fill", "steelblue"); 
+        // }
+    // });
 
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale)
-        .tickFormat(d3.format(".2s"));;
+        .tickFormat(d3.format(".2s"));
 
 
     svg.append("g")
@@ -62,7 +78,7 @@ async function plotSalaryPerJobTitle() {
         .attr("class", "y-axis")
         .call(yAxis);
 
-    const titleText = "Product Prices"; // Change this to your desired title
+    const titleText = "Salary Per Job Title"; // Change this to your desired title
     const titleFontSize = 18;
 
     svg.append("text")
@@ -73,6 +89,9 @@ async function plotSalaryPerJobTitle() {
         .text(titleText);
 }
 // -------------------------------------------------------------------------------
+
+
+// ----------------------------Top 10 Paid skills vs top 10 reqierd skills-----------------------------
 
 
 plotSalaryPerJobTitle();    
