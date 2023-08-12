@@ -4,37 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data jobs analysis app</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
 
-        <nav class="navbar">
-            <button class="navbar-button navbar-button-left">Freelance</button>
-            <h1 class="navbar-title">Data Jobs Analysis App</h1>
-            
-            <button class="navbar-button navbar-button-right button-selected">Jobs</button>
-        </nav>
+<body>
 
-        <div class="grid-container">
-            <div class="grid-item"><canvas id="salary-per-job-title">
-            </canvas></div>
+    <nav class="navbar">
+        <button class="navbar-button navbar-button-left">Freelance</button>
+        <h1 class="navbar-title">Data Jobs Analysis App</h1>
+        
+        <button class="navbar-button navbar-button-right button-selected">Jobs</button>
+    </nav>
+<!-- 
+    <div id="chart"></div>
+    <svg> 
+        <circle class="target" style="fill: #69b3a2" stroke="black" cx=50 cy=50 r=40></circle>
+    </svg> -->
 
-            <div class="grid-item"><canvas>
-            </canvas></div>
+    <div class="grid-container">
 
-            <div class="grid-item"><canvas>
-            </canvas></div>
-
-            <div class="grid-item"><canvas>
-            </canvas></div>
-
-            <div class="grid-item"><canvas>
-            </canvas></div>
-
-            <div class="grid-item transparent-card">
-            
-            </div>
+        <div class="grid-item">
+            <div id="salary_per_job_title"></div>
         </div>
 
-    </body>
+        <div class="grid-item"></div>
+
+        <div class="grid-item"></div>
+
+        <div class="grid-item"></div>
+
+        <div class="grid-item"><canvas>
+        </canvas></div>
+
+        <div class="grid-item transparent-card">
+        
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>

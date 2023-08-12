@@ -29,6 +29,7 @@ body {
     padding: 10px 20px;
     background-color: var(--card);
     color: var(--font-color);
+    box-shadow: 0 4px 6px var(--shadow);
 }
 
 .navbar-button {
@@ -97,6 +98,32 @@ body {
     box-shadow: 0 0px 0px var(--bg);
 }
 
+.plot-title{
+    font-family: 'Open Sans', sans-serif;
+    font-size: var(--font-size);
+    fill: var(--font-color);
+}
+
+
+.x-axis line{
+    stroke: var(--font-color);
+}
+.x-axis path{
+    stroke: var(--font-color);
+}
+.x-axis text{
+    fill: var(--font-color);
+}
+
+.y-axis line{
+    stroke: var(--font-color);
+}
+.y-axis path{
+    stroke: var(--font-color);
+}
+.y-axis text{
+    fill: var(--font-color);
+}
 
 canvas {
     width: 380px;

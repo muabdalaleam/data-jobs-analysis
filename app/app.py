@@ -26,15 +26,15 @@ def index():
 
 
     # ---------------Top 10 Paid & requird skills data visualization------------
-    top_paid_and_reqierd_skills_query = """
+    # top_paid_and_reqierd_skills_query = """
 
-    """
+    # """
 
-    top_paid_and_reqierd_skills_data = execute_query(top_paid_and_reqierd_skills_query)
+    # top_paid_and_reqierd_skills_data = execute_query(top_paid_and_reqierd_skills_query)
     # --------------------------------------------------------------------------
 
     return render_template('index.html',salary_per_job_title= salary_per_job_title_data,
-                                        top_paid_and_reqierd_skills= top_paid_and_reqierd_skills_data)
+                                        top_paid_and_reqierd_skills= None)
 
 
 def execute_query(query):
