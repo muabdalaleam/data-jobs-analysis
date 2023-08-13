@@ -10,15 +10,13 @@ const main_color = "#51fcc6"
 
 
 
-// -------------------Salary per Job title pictogram chart-----------------------
-const api_url = "/data/salary_per_job_title_data";
+// -------------------Salary per Job title bar chart-----------------------
+let salary_per_job_title_url = "/data/salary_per_job_title";
 
 async function plotSalaryPerJobTitle() {
 
-    const response = await fetch(api_url);
-    console.log(response)
+    const response = await fetch(salary_per_job_title_url);
     const data = await response.json();
-
 
     const svg = d3.select("#salary_per_job_title")
         .append("svg")
@@ -37,32 +35,24 @@ async function plotSalaryPerJobTitle() {
         .nice()
         .range([height, 0]);
 
-const yTicks = yScale.ticks();
+    const bars = svg.selectAll(".bar")
+        .data(data.avg_salary)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", (d, i) => xScale(data.job_title[i]))
+        .attr("width", xScale.bandwidth())
+        .attr("y", yScale(0)) // Start from the bottom
+        .attr("height", 0)    // Initial height is 0
+        .attr("rx", 3)
+        .attr("fill", (d, i) => d == data.avg_salary[0] ? main_color : "gray")
+        .attr('class', (d, i) => d == data.avg_salary[0] ? "svg-shadow" : "gray")
 
-svg.selectAll(".circle-group")
-    .data(data.avg_salary)
-    .enter()
-    .append("g")
-    .attr("class", "circle-group")
-    .attr("transform", (d, i) => `translate(${xScale(data.job_title[i]) + xScale.bandwidth() / 2}, ${yScale(data.avg_salary[i])})`)
-    // .each(function(d, i) {
-const group = d3.select(this)
-
-        // let numCircles = Math.ceil(yScale(yTicks[0]) - yScale(data.avg_salary[i]));
-        // numCircles = Math.ceil(numCircles * 0.05); // Down scaling the count of circles so it's more readable
-
-        // console.log(numCircles);
-
-        // for (let j = 0; j < numCircles; j++) {
-        //     let circleY = (j * 20); // Adjusted the calculation for y-coordinate
-
-        //     group.append("circle")
-        //         .attr("cx", 0)
-        //         .attr("cy", circleY)
-        //         .attr("r", 10)
-        //         .style("fill", "steelblue"); 
-        // }
-    // });
+    bars.transition()
+        .delay((d, i) => i * 500) // Adjust the delay time (in milliseconds)
+        .duration(750)            // Transition duration
+        .attr("y", d => yScale(d))
+        .attr("height", d => height - yScale(d));
 
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale)
@@ -88,10 +78,55 @@ const group = d3.select(this)
         .attr("text-anchor", "middle") // Centered text
         .text(titleText);
 }
-// -------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------
+
 
 
 // ----------------------------Top 10 Paid skills vs top 10 reqierd skills-----------------------------
+paid_vs_required_skills_url = "/data/paid_vs_required_skills";
 
+async function plotTopPaidVsReqierdSkills() {
 
-plotSalaryPerJobTitle();    
+    const response = await fetch(paid_vs_required_skills_url);
+    const data = await response.json();
+
+    console.log(data)
+    const svg = d3.select("#paid_vs_required_skills")
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const xScale = d3.scaleBand()
+        .domain([0, d3.max(data.appending_count)])
+        .range([0, width])
+        .padding(0.1)
+
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(data.avg_salary)])
+        .nice()
+        .range([height, 0]);
+
+    g.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale));
+    
+    g.append("g")
+        .call(d3.axisLeft(yScale));
+
+    svg.append('g')
+        .selectAll("dot")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", function (d) { return xScale(d[0]); } )
+        .attr("cy", function (d) { return yScale(d[1]); } )
+        .attr("r", 2)
+        .attr("transform", "translate(" + 100 + "," + 100 + ")")
+        .style("fill", "#CC0000");
+}
+// ----------------------------------------------------------------------------------------------------
+
+plotSalaryPerJobTitle(); 
+plotTopPaidVsReqierdSkills();   

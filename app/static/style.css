@@ -104,6 +104,12 @@ body {
     fill: var(--font-color);
 }
 
+.plot-text{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12;
+    fill: var(--font-color);
+}
+
 
 .x-axis line{
     stroke: var(--font-color);
@@ -124,6 +130,12 @@ body {
 .y-axis text{
     fill: var(--font-color);
 }
+
+.svg-shadow {
+    -webkit-filter: drop-shadow(0px 0px 20px rgba(255,255,255,1));
+    filter: drop-shadow(0px 0px 10px var(--primary));
+    /* Similar syntax to box-shadow */
+  }
 
 canvas {
     width: 380px;
