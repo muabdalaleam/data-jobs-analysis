@@ -1,19 +1,23 @@
-// Sample data in the specified format
-
 const svgWidth  = 400;
-const svgHeight = 240;
+const svgHeight = 230;
 const margin    = { top: 30, right: 20, bottom: 30, left: 30 };
 
-const width          = svgWidth - margin.left - margin.right;
-const height         = svgHeight - margin.top - margin.bottom;
-const main_color     = "#51fcc6";
-const secondry_color = "#666666";
-const minRadius      = 4;
-const maxRadius      = 8;
-const numRows = 4;
-const numCols = 7;
+const width             = svgWidth - margin.left - margin.right;
+const height            = svgHeight - margin.top - margin.bottom;
+const main_color        = "#51fcc6";
+const main_color_darker = "#64caaa";
+const secondary_color   = "#808080";
+const dark_font_color   = "#272b30";
+const minRadius         = 4;
+const maxRadius         = 8;
+const rectSizeFactor    = 1.2;
 
-const title_shift_const = 20
+const maxStringSize = 40;
+const numRows       = 4;
+const numCols       = 7;
+
+const textVericalShiftFactor = 1.05;
+const TitleShiftConst        = 20;
 
 function calculateQ3(data) {
     const sortedData = d3.sort(data);
@@ -26,7 +30,33 @@ function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&Salary per Job title bar chart&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+// ==============================Creating the Dropdowns==============================
+document.getElementById('job_title').addEventListener('change', function() {
+    var selectedJobTitle = this.value;
+
+    sendSelectedValue(selectedJobTitle);
+});
+
+document.getElementById('dropdown2').addEventListener('change', function() {
+    var selectedValue = this.value;
+    sendSelectedValue(selectedValue);
+});
+
+function sendSelectedValue(selectedJobTitle, selectedCountry) {
+    fetch('/print_to_console', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({country: country})
+    });
+}
+// ==================================================================================
+
+
+
+// ===========================Salary per Job title bar chart==========================
 let salary_per_job_title_url = "/data/salary_per_job_title";
 
 async function plotSalaryPerJobTitle() {
@@ -42,7 +72,7 @@ async function plotSalaryPerJobTitle() {
         .attr("transform", `translate(${margin.left},${margin.top})`);
         
 
-    // ====================Making the plot X and Y axises====================
+    // --------------------Making the plot X and Y axises--------------------
     const xScale = d3.scaleBand()
         .domain(data.job_title)
         .range([0, width])
@@ -65,10 +95,10 @@ async function plotSalaryPerJobTitle() {
     svg.append("g")
         .attr("class", "y-axis")
         .call(yAxis);
-    // =======================================================================
+    // ------------------------------------------------------------------------
 
 
-    // =================Making the bar chart & it's animation==================
+    // ----------------=Making the bar chart & it's animation------------------
     const bars = svg.selectAll(".bar")
         .data(data.avg_salary)
         .enter()
@@ -87,26 +117,26 @@ async function plotSalaryPerJobTitle() {
         .duration(750)            // Transition duration
         .attr("y", d => yScale(d))
         .attr("height", d => height - yScale(d));
-    // =======================================================================
+    // -----------------------------------------------------------------------
 
 
-    // ====================Plot title====================
+    // ------------------------------Plot title-------------------------------
     const titleText = "Salary Per Job Title";
     const titleFontSize = 18;
 
     svg.append("text")
         .attr("class", "plot-title")
-        .attr("x", (svgWidth / 2) - title_shift_const)
+        .attr("x", (svgWidth / 2) - TitleShiftConst)
         .attr("y", -margin.top / 2)
         .attr("text-anchor", "middle")
         .text(titleText);
-    // ==================================================
+    // ------------------------------------------------------------------------
 }
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// =================================================================================================
 
 
 
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&Top 10 Paid skills vs top 10 reqierd skills&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// ==========================&Top 10 Paid skills vs top 10 reqierd skills===========================
 paid_vs_required_skills_url = "/data/paid_vs_required_skills";
 
 async function plotTopPaidVsReqierdSkills() {
@@ -114,8 +144,6 @@ async function plotTopPaidVsReqierdSkills() {
     const response = await fetch(paid_vs_required_skills_url);
     const data = await response.json();
 
-    console.log(data);
-    
     const svg = d3.select("#paid_vs_required_skills")
         .append("svg")
         .attr("width", svgWidth)
@@ -128,7 +156,7 @@ async function plotTopPaidVsReqierdSkills() {
         .range([minRadius, maxRadius]);
 
 
-    // ====================X axis====================
+    // --------------------------X axis-----------------------
     const xScale = d3.scaleLinear()
         .domain([0, 0])
         .range([0, width]);
@@ -141,10 +169,10 @@ async function plotTopPaidVsReqierdSkills() {
                 .tickFormat(d3.format(".2s")))
 
         .attr("opacity", "0");
-    // ==============================================
+    // -------------------------------------------------------
 
 
-    // ====================Y axis====================
+    // -------------------------Y axis-------------------------
     const yScale = d3.scaleLinear()
         .domain([0, d3.max(data.appending_count)])
         .range([height, 0]);
@@ -153,10 +181,10 @@ async function plotTopPaidVsReqierdSkills() {
         .attr("class", "y-axis")
         .call(d3.axisLeft(yScale)
                 .ticks(3));
-    // ==============================================
+    // ---------------------------------------------------------
 
 
-    // ====================Making the tooltip====================
+    // --------------------Making the tooltip--------------------
     const mouseover = function (event, d, i) {
         tooltipText.style("opacity", 1);
         tooltipRect.style("opacity", 1);
@@ -196,10 +224,9 @@ async function plotTopPaidVsReqierdSkills() {
         .attr("class", "tooltip")
         .style("opacity", 0)
         .style("font-size", "12px");
-    // ==================================================================
+    // --------------------------------------------------------
 
-
-    // ====================Creating the scatter plot====================
+    // ----------------Creating the scatter plot---------------
     svg.selectAll(".dot")
         .data(data.skill)
         .enter().append("circle")
@@ -213,23 +240,23 @@ async function plotTopPaidVsReqierdSkills() {
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
         .attr("opacity", "0");
-    // ==================================================================
+    // --------------------------------------------------------
 
 
-    // ====================Plot title====================
+    // ----------------------Plot title-------------------------
     const titleText = "Skills Pay Vs Appending Count"; // Change this to your desired title
     const titleFontSize = 18;
 
     svg.append("text")
         .attr("class", "plot-title")
-        .attr("x", (svgWidth / 2) - title_shift_const  )
+        .attr("x", (svgWidth / 2) - TitleShiftConst  )
         .attr("y", -margin.top / 2)
         .attr("text-anchor", "middle")
         .text(titleText);
-    // ===================================================
+    // ---------------------------------------------------------
 
 
-    // ====================Adding the X axis animation====================
+    // ----------------Adding the X axis animation---------------
     xScale.domain([d3.min(data.avg_salary) / 1.2, d3.max(data.avg_salary) * 1.1]);
 
     svg.select(".x-axis")
@@ -256,25 +283,25 @@ async function plotTopPaidVsReqierdSkills() {
         .attr("cx", (d, i) => xScale(data.avg_salary[i]))
         .attr("cy", (d, i) => yScale(data.appending_count[i] + 15))
         .attr("opacity", "1")
-    // ==================================================================
+    // ------------------------------------------------------------
 
 
-    // ====================Add x-axis label====================
+    // ----------------------Add x-axis label----------------------
     svg.append("text")
         .attr("class", "x-label")
-        .attr("x", (svgWidth / 2) - title_shift_const)
+        .attr("x", (svgWidth / 2) - TitleShiftConst)
         .attr("y", height + margin.bottom - 4)
         .style("text-anchor", "middle")
         .text("Average Pay")
         .attr("class", "plot-text")
         .attr("font-size", "10");
-    // =========================================================
+    // ------------------------------------------------------------
 }
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// ====================================================================================================&
 
 
 
-// &&&&&&&&&&&&&&&&&&&&&&&&&&People earned more than 1,000 on Upwork Pictogram&&&&&&&&&&&&&&&&&&&&&&&&&&
+// ==========================People earned more than 1,000 on Upwork Pictogram==========================
 people_who_earned_money_url = "/data/people_who_earned_money";
 
 async function plotPeopleWhoEarnedMoneyPictogram() {
@@ -282,9 +309,10 @@ async function plotPeopleWhoEarnedMoneyPictogram() {
     const response = await fetch(people_who_earned_money_url);
     let data = await response.json();
 
-    // console.log(data);
+    const earnedMoneyPercentage = data['people_earned_money_percentage'][0];
+    const didntEarnMoneyPercentage = data['people_didnt_earn_money_percentage'][0];
     
-    // ============================Creating the SVG canvas & the X, Y axes============================
+    // ----------Creating the SVG canvas & the X, Y axes------------
     const svg = d3.select("#people_who_earned_money")
         .append("svg")
         .attr("width", svgWidth)
@@ -292,121 +320,204 @@ async function plotPeopleWhoEarnedMoneyPictogram() {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const yScale = d3.scaleLinear()
-        .range([0,250])
+    const yScale = d3.scaleBand()
+        .range([height+30, 10])
         .domain(d3.range(numRows));
 
-    const xScale = d3.scaleLinear(numCols)
-        .range([0, 250])
-        .domain(d3.range(7));
-    // ===============================================================================================
+    const xScale = d3.scaleBand()
+        .range([0, width])
+        .domain(d3.range(numCols));
+    // --------------------------------------------------------------
 
 
-    // ======================================Creating the chart=======================================
-    console.log(data_)
+    // ----------------------Creating the chart----------------------
+    const totalCells = numRows * numCols;
+    const numEarnedMoneyCells = Math.round((earnedMoneyPercentage / 100) * totalCells);
 
-    var container = svg.append('g').attr('transform', 'translate(135,130)');
+    const chart_data = Array.from(
+        { length: totalCells - numEarnedMoneyCells },
+        () => 'people_didnt_earn_money'
+    ).concat(Array.from({ length: numEarnedMoneyCells }, () => 'people_earned_money'));
+    
 
-    container.selectAll('circle')
-        .data(data_)
-        .enter()
-        .append('circle')
-        .attr('id', function(d, i) {
-            return 'id' + i;
-        })
-        .attr('cx', function(d, i) {
-            return xScale(i % numCols);
-        })
-        .attr('cy', function(d, i) {
-            return yScale(Math.floor(i / numCols));
-        })
-        .attr('r', 12)
-        .attr('fill', function(d) {
-            return d === 'people_earned_money' ? main_color : secondary_color;
-        })
-        .style('stroke', 'black');
-    // ===============================================================================================
+    const container = svg.append('g')
+        .attr("y", -60)
+
+    const images = container.selectAll('image')
+            .data(chart_data)
+            .enter()
+            .append('image')
+            .attr('xlink:href', d => d == 'people_earned_money' ? '../static/assets/person_colored.svg' : '../static/assets/person_grey.svg')
+            .attr('width', 40)
+            .attr('height', 40)
+            .attr('x', (d, i) => xScale(i % numCols))
+            .attr('y', (d, i) => yScale(Math.floor(i / numCols)))
+            .attr('class', (d) => d === 'people_earned_money' ? "svg-shadow" : secondary_color)
+            .attr('opacity', 0)
+    // -------------------------------------------------------------------
+
+
+    // ----------------------------Plot title-----------------------------
+    const titleText = "Who earned above 1K on Upwork"; // Change this to your desired title
+    const titleFontSize = 18;
+
+    svg.append("text")
+        .attr("class", "plot-title")
+        .attr("x", (svgWidth / 2) - TitleShiftConst - 10)
+        .attr("y", -margin.top / 2)
+        .attr("text-anchor", "middle")
+        .text(titleText);
+
+    svg.append("text")
+        .attr("class", "plot-text")
+        .attr("x", (svgWidth / 2) - TitleShiftConst - 10)
+        .attr("y", (-margin.top / 2) + 15)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 12)
+        .text("& who didn't");
+    // -------------------------------------------------------------------
+
+
+    // ---------------Adding animations to the chart----------------------
+    images.transition()
+        .delay((d, i) => (i * 100))
+        .duration(500)
+        .attr('opacity', 1);
+    // -------------------------------------------------------------------
 };
 
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// =====================================================================================================
 
 
 
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&$$$$$$$$$$$$$$Average Salaries Map&&&&&&&&&&$$$$$$$$$$$$$$&&&&&&&&&&&&&&&&&
-// async
-// function plotAverageSalariesMap() {
+// =========================Total Jobs Per Industry Stacked single column chart=========================
+total_jobs_per_industry_url = "/data/total_jobs_per_industry_data";
 
-//     const data = {
-//         'address': ['Menlo Park, CA', 'San Francisco, CA', 'Concord, CA'],
-//         'avg_salary': [80000, 150000, 70000]
-//     };
-    
-//     // Preparing the addresses data
-//     async function getCoordinates(address) {
-//         const geocoder = new google.maps.Geocoder();
-//         return new Promise((resolve, reject) => {
-//             geocoder.geocode({ address: address }, (results, status) => {
-//                 if (status === google.maps.GeocoderStatus.OK) {
-//                     const location = results[0].geometry.location;
-//                     resolve({ lat: location.lat(), lon: location.lng() });
-//                 } else {
-//                     reject(status);
-//                 }
-//             });
-//         });
-//     }
-    
-//     // Create map function
-//     async function createMap() {
-//         // Get coordinates for addresses
-//         const coordinatesPromises = data.address.map(address => getCoordinates(address));
-//         const coordinates = await Promise.all(coordinatesPromises);
-    
-//         // Create map layout
-//         const layout = {
-//             title: 'Average Salary by City in California',
-//             geo: {
-//                 projection: { type: 'mercator' },
-//                 center: { lat: 36.7783, lon: -119.4179 },
-//                 scope: 'usa',
-//                 bgcolor: 'rgba(0,0,0,0)',
-//                 showland: true,
-//                 landcolor: 'rgb(48,48,48)',
-//                 countrycolor: 'rgb(48,48,48)',
-//                 showlakes: true,
-//                 lakecolor: 'rgb(0,0,0)',
-//                 showocean: true,
-//                 oceancolor: 'rgb(0,0,0)',
-//                 showrivers: true,
-//                 rivercolor: 'rgb(0,0,0)',
-//             }
-//         };
-    
-//         // Create map data
-//         const mapData = [{
-//             type: 'scattergeo',
-//             mode: 'markers+text',
-//             locations: coordinates.map(coord => [coord.lat, coord.lon]),
-//             text: data.avg_salary.map(salary => `$${salary.toLocaleString()}`),
-//             marker: {
-//                 size: data.avg_salary.map(salary => Math.sqrt(salary) / 1000),
-//                 sizemode: 'diameter',
-//                 opacity: 0.7,
-//                 color: 'red'
-//             }
-//         }];
-    
-//         // Create the plot using Plotly
-//         Plotly.newPlot('avg_salaries_map', mapData, layout);
-//     }
-    
-//     // Call the createMap function
-//     createMap();
-// }
+async function plotTotalJobsPerIndustry() {
 
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+    // -----------------Preparing the chart data & main SVG-------------------
+    const response = await fetch(total_jobs_per_industry_url);
+    const data = await response.json();
+    
+    const svg = d3.select("#total_jobs_per_industry")
+        .append("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    let chart_data = {'total_jobs': [],
+                'industry': []}
+
+    for (let i = 0; i < data.industry.length; i++) {
+
+        let industry = data.industry[i];
+        let total_jobs =   data.total_jobs[i];
+        
+        if (total_jobs > 700) {
+            total_jobs = 500
+        } else if (total_jobs > 400) {
+            total_jobs *= .8
+        } else if (total_jobs < 200) {
+            total_jobs *= 1.6
+        }
+
+        if (industry.length > maxStringSize) {
+            industry = industry.slice(0, maxStringSize - 6).concat("...")
+        }
+
+        chart_data.industry   .push(industry);
+        chart_data.total_jobs .push(total_jobs);
+        }
+    // -----------------------------------------------------------------------
+
+
+    // ----------------------Creating the color Gradient----------------------
+    const gradientColors = d3.interpolateRgb(main_color_darker, secondary_color);
+
+    const gradientScale = d3.scaleLinear()
+        .domain([0, chart_data.total_jobs.length - 1]) // Adjust the domain based on your data
+        .range([0, 1]);
+
+    const color = d3.scaleOrdinal()
+        .domain(chart_data.total_jobs.map((d, i) => i))
+        .range(chart_data.total_jobs.map( (d, i) => gradientColors(gradientScale(i))));
+    // -----------------------------------------------------------------------
+
+
+    // ---------------------Creating the Y axes & the chart-------------------
+    
+    const yScale = d3.scaleLinear()
+        .range([height, 0])
+        .domain([0, d3.sum(chart_data.total_jobs)]);
+
+    RectYAxes = (d, i) => yScale(d * rectSizeFactor + d3.sum(chart_data.total_jobs.slice(0, i)) * rectSizeFactor) + margin.bottom;
+
+    const groups = svg.selectAll('.group')
+        .data(chart_data.total_jobs)
+        .enter()
+        .append('g')
+        .attr('class', 'group')
+        .attr('transform', (d, i) => `translate(${(margin.right * 1.25) - margin.left}, ${RectYAxes(d, i)})`)
+        .attr('opacity', 0);
+
+    groups.append('rect')
+        .attr('class', 'bar')
+        .attr('height', (d) => yScale(0) - yScale(d * rectSizeFactor))
+        .attr('width', width)
+        .attr('fill', (d, i)   => (i == 0)   ? main_color : color(d))
+        .attr("filter", (d, i) => (i == 0) ? `drop-shadow(0px 0px ${10}px ${main_color})` : '');
+    // -----------------------------------------------------------------------
+
+
+    // ------------------------Creating the text labels-----------------------
+    groups.append('text')
+        .attr('font-size', 11)
+        .attr("fill", dark_font_color)
+        .attr('xml:space', 'preserve')
+        .attr('y', (d) => (d < 300) ? (yScale(0) - yScale(d)/textVericalShiftFactor) : yScale(0) - yScale(d))
+        .attr('x', (margin.right))
+        .attr('dy', -10)
+        .text((d, i) => `${data.industry[i]}`
+            .concat(' '.repeat(maxStringSize - data.industry[i].length)))
+        
+
+    groups.append('text')
+        .attr('font-size', 11)
+        .attr("fill", dark_font_color)
+        .attr('xml:space', 'preserve')
+        .attr('y', (d) => (d < 300) ? (yScale(0) - yScale(d)/textVericalShiftFactor) : yScale(0) - yScale(d))
+        .attr('x', (width - margin.left * 2.5))
+        .attr('dy', -10)
+        .text((d, i) => `${data.total_jobs[i]} Jobs`)
+    // -----------------------------------------------------------------------
+
+
+    // ---------------------------Adding the animation-----------------------
+    groups.transition()
+        .delay((d, i) => i * 500)
+        .duration(750)
+        .attr("opacity", 1)
+    // ----------------------------------------------------------------------
+
+
+    // ------------------------------Plot title-------------------------------
+    const titleText = "Total jobs per industry"; // Change this to your desired title
+    const titleFontSize = 18;
+
+    svg.append("text")
+        .attr("class", "plot-title")
+        .attr("x", (svgWidth / 2) - TitleShiftConst - 10)
+        .attr("y", -margin.top / 2)
+        .attr("text-anchor", "middle")
+        .text(titleText);
+    // -----------------------------------------------------------------------
+}
+// =====================================================================================================
+
 
 plotSalaryPerJobTitle(); 
 plotTopPaidVsReqierdSkills();
 plotPeopleWhoEarnedMoneyPictogram();
-// plotAverageSalariesMap();
+plotTotalJobsPerIndustry();

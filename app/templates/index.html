@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data jobs analysis app</title>
-    <link rel="icon" type="image/x-icon" href="../../imgs/logo.png">
+    <link rel="icon" type="image/x-icon" href="../static/assets/logo.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../static/style.css"/>
 </head>
@@ -12,10 +12,11 @@
 <body>
 
     <nav class="navbar">
-        <button class="navbar-button navbar-button-left">Freelance</button>
+        <button class="navbar-button navbar-button-left">AI Jobs Bot</button>
+
         <h1 class="navbar-title">Data Jobs Analysis App</h1>
         
-        <button class="navbar-button navbar-button-right button-selected">Jobs</button>
+        <button class="navbar-button navbar-button-right button-selected">Dashboard</button>
     </nav>
 <!-- 
     <div id="chart"></div>
@@ -30,15 +31,34 @@
         </div>
 
         <div class="grid-item">
-            <div id="paid_vs_requird_skills"></div>
+            <div id="paid_vs_required_skills"></div>
         </div>
 
-        <div class="grid-item"></div>
+        <div class="grid-item">
+                <label>Select a Job title:</label>
 
-        <div class="grid-item"></div>
+                <select id="job_title">
+                    <option value="option1">hi 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                </select>
 
-        <div class="grid-item"><canvas>
-        </canvas></div>
+                <label style= "margin-top: 20px;">Select a country:</label>
+
+                <select id="country">
+                    <option value="option1">hi 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                </select>
+        </div>
+
+        <div class="grid-item">
+            <div id="people_who_earned_money"></div>
+        </div>
+
+        <div class="grid-item">
+            <div id="total_jobs_per_industry" ></div>
+        </div>
 
         <div class="grid-item transparent-card">
         

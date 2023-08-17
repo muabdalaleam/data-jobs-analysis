@@ -1,3 +1,2 @@
-.env
-app/node_modules
 credentials.json
+requirements.txt
