@@ -32,26 +32,33 @@ function capitalizeFirstLetter(str) {
 
 
 // ==============================Creating the Dropdowns==============================
-document.getElementById('job_title').addEventListener('change', function() {
-    var selectedJobTitle = this.value;
+// function sendSelectedValues(selectedJobTitle, selectedCountry) {
+//     fetch('/dropdown_data', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({country: selectedCountry,
+//                             job_title: selectedJobTitle})
+//     });
+// }
 
-    sendSelectedValue(selectedJobTitle);
-});
+// function handleChangeEvent() {
+//     var selectedJobTitle = document.getElementById('job_title').value;
+//     var selectedCountry = document.getElementById('country').value;
+//     sendSelectedValues(selectedJobTitle, selectedCountry);
+// }
 
-document.getElementById('dropdown2').addEventListener('change', function() {
-    var selectedValue = this.value;
-    sendSelectedValue(selectedValue);
-});
+// function handleLoadEvent() {
+//     var selectedJobTitle = document.getElementById('job_title').value;
+//     var selectedCountry = document.getElementById('country').value;
+//     sendSelectedValues(selectedJobTitle, selectedCountry);
+// }
 
-function sendSelectedValue(selectedJobTitle, selectedCountry) {
-    fetch('/print_to_console', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({country: country})
-    });
-}
+// // Attach event listeners
+// document.getElementById('job_title').addEventListener('change', handleChangeEvent);
+// document.getElementById('country').addEventListener('change', handleChangeEvent);
+// window.addEventListener('load', handleLoadEvent);
 // ==================================================================================
 
 
@@ -417,8 +424,10 @@ async function plotTotalJobsPerIndustry() {
         
         if (total_jobs > 700) {
             total_jobs = 500
+
         } else if (total_jobs > 400) {
             total_jobs *= .8
+
         } else if (total_jobs < 200) {
             total_jobs *= 1.6
         }
