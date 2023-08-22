@@ -7,11 +7,18 @@ Important note: the queries that will be runned are DML queries.
 
 from google.cloud import bigquery
 import pandas as pd
+import sys
 import os
+
+sys.path.insert(1, '../my_encrypter')
+import encrypt
+
+encrypt.decrypt_json_file('../credentials.json')
 
 dataset_id       :str = 'data_jobs_analysis_db'
 project_id       :str = 'data-jobs-analysis-db'
 credentials_path :str = '../credentials.json'
+
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 
@@ -40,3 +47,5 @@ def run_queries(query_path: str) -> None:
 run_queries('queries/removing-nans.sql')
 run_queries('queries/wrong-dtypes-fix.sql')
 run_queries('queries/removing-useless-cols.sql')
+
+encrypt.encrypt_json_file('../credentials.json')

@@ -10,6 +10,12 @@ the data again.
 from google.cloud import bigquery
 import pandas as pd
 import os
+import sys
+
+sys.path.insert(1, '../my_encrypter')
+import encrypt
+
+encrypt.decrypt_json_file('../credentials.json')
 
 dataset_id       :str = 'data_jobs_analysis_db'
 project_id       :str = 'data-jobs-analysis-db'
@@ -35,3 +41,5 @@ for table_name, df in dataframes.items():
     
     job.result()
     print(f'DataFrame \'{table_name}\' uploaded as table \'{table_id}\' in BigQuery.')
+
+encrypt.encrypt_json_file('../credentials.json')

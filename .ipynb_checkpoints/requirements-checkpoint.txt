@@ -2,7 +2,6 @@ requests
 bs4
 numpy
 pandas
-scrapy
 lxml
 pandasql 
 webdriver-manager
@@ -11,6 +10,8 @@ geoplot
 matplotlib
 fake-useragent
 seaborn
+python-dotenv
+cryptography
 plotly
 pyarrow
 html5lib
@@ -22,7 +23,6 @@ google-cloud-bigquery
 hsluv
 googlemaps
 wordcloud 
-Scarpy
 plotly-geo
 geopandas
 pyshp

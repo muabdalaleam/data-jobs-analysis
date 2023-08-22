@@ -1,16 +1,21 @@
 import os
+import sys
 import pandas as pd
 import numpy  as np
 
 from collections     import Counter
 from dotenv          import load_dotenv
 from flask           import (Flask, render_template, request,
-                            jsonify, send_from_directory, session)
+                            jsonify, session)
 from google.cloud    import bigquery
 
 app = Flask(__name__, template_folder='templates')
 
+sys.path.insert(1, '../my_encrypter')
 load_dotenv()
+
+import encrypt
+encrypt.decrypt_json_file('../credentials.json')
 
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../credentials.json'
@@ -140,6 +145,7 @@ def main():
                     "people_who_earned_money" : people_who_earned_money_data,
                     "total_jobs_per_industry" : total_jobs_per_industry_data})
 
+encrypt.encrypt_json_file('../credentials.json')
 
 if __name__ == '__main__':
     app.run(debug=True)

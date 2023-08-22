@@ -11,6 +11,7 @@ matplotlib
 fake-useragent
 seaborn
 python-dotenv
+cryptography
 plotly
 pyarrow
 html5lib
