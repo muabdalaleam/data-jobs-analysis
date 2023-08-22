@@ -10,6 +10,7 @@ geoplot
 matplotlib
 fake-useragent
 seaborn
+gunicorn
 python-dotenv
 cryptography
 plotly
