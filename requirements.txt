@@ -5,14 +5,10 @@ pandas
 lxml
 pandasql 
 webdriver-manager
-geopandas
-geoplot
 matplotlib
-fake-useragent
 seaborn
 gunicorn
 python-dotenv
-cryptography
 plotly
 pyarrow
 html5lib
@@ -22,9 +18,5 @@ google
 scrapy
 google-cloud-bigquery
 hsluv
-googlemaps
-wordcloud 
-plotly-geo
-geopandas
-pyshp
+wordcloud
 shapely
