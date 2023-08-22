@@ -16,60 +16,87 @@ const maxStringSize = 40;
 const numRows       = 4;
 const numCols       = 7;
 
-const textVericalShiftFactor = 1.05;
-const TitleShiftConst        = 20;
+const minimumScatterAppendingCount = 10
+const textVericalShiftFactor       = 1.04;
+const TitleShiftConst              = 20;
 
-function calculateQ3(data) {
+
+function normalizeArray(arr) {
+    const transformedArr = arr.map(value => Math.log(value + 1));
+    return transformedArr;
+}
+
+function calculateQuantile(data, percentage) {
     const sortedData = d3.sort(data);
     const medianPosition = Math.floor(sortedData.length * 0.75);
 
-    return d3.quantile(sortedData, 0.75);
+    return d3.quantile(sortedData, percentage);
 }
 
 function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function chartLoading(elementId) {
+    document.getElementById(elementId).innerHTML = `            
+    <div class="loader">
+        <div class="one"></div>
+        <div class="two"></div>
+    </div>`;
+}
+
+function stopLoading(elementId) {
+    document.getElementById(elementId).innerHTML = ``;
+}
 
 // ==============================Creating the Dropdowns==============================
-// function sendSelectedValues(selectedJobTitle, selectedCountry) {
-//     fetch('/dropdown_data', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({country: selectedCountry,
-//                             job_title: selectedJobTitle})
-//     });
-// }
+function sendSelectedValues(selectedJobTitle, selectedCountry) {
+    fetch('/dropdown_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({country: selectedCountry,
+                            job_title: selectedJobTitle})
+    }).then(() => {
+        plotSalaryPerJobTitle(); 
+        plotTopPaidVsReqierdSkills();
+        plotPeopleWhoEaredMoneyPictogram();
+        plotTotalJobsPerIndustry();
+});
+};
 
-// function handleChangeEvent() {
-//     var selectedJobTitle = document.getElementById('job_title').value;
-//     var selectedCountry = document.getElementById('country').value;
-//     sendSelectedValues(selectedJobTitle, selectedCountry);
-// }
 
-// function handleLoadEvent() {
-//     var selectedJobTitle = document.getElementById('job_title').value;
-//     var selectedCountry = document.getElementById('country').value;
-//     sendSelectedValues(selectedJobTitle, selectedCountry);
-// }
+function handleChangeEvent() {
+    var selectedJobTitle = document.getElementById('job_title').value;
+    var selectedCountry = document.getElementById('country').value;
+    sendSelectedValues(selectedJobTitle, selectedCountry);
+}
 
-// // Attach event listeners
-// document.getElementById('job_title').addEventListener('change', handleChangeEvent);
-// document.getElementById('country').addEventListener('change', handleChangeEvent);
-// window.addEventListener('load', handleLoadEvent);
+function handleLoadEvent() {
+    var selectedJobTitle = document.getElementById('job_title').value;
+    var selectedCountry = document.getElementById('country').value;
+    sendSelectedValues(selectedJobTitle, selectedCountry);
+}
+
+// Attach event listeners
+document.getElementById('job_title').addEventListener('change', handleChangeEvent);
+document.getElementById('country').addEventListener('change', handleChangeEvent);
+window.addEventListener('load', handleLoadEvent);
 // ==================================================================================
 
 
 
 // ===========================Salary per Job title bar chart==========================
-let salary_per_job_title_url = "/data/salary_per_job_title";
-
 async function plotSalaryPerJobTitle() {
 
-    const response = await fetch(salary_per_job_title_url);
-    const data     = await response.json();
+    chartLoading("salary_per_job_title")
+
+    const response = await fetch('/data');
+    let data       = await response.json();
+
+    data = data.salary_per_job_title
+    stopLoading("salary_per_job_title")
 
     const svg = d3.select("#salary_per_job_title")
         .append("svg")
@@ -144,12 +171,16 @@ async function plotSalaryPerJobTitle() {
 
 
 // ==========================&Top 10 Paid skills vs top 10 reqierd skills===========================
-paid_vs_required_skills_url = "/data/paid_vs_required_skills";
-
 async function plotTopPaidVsReqierdSkills() {
 
-    const response = await fetch(paid_vs_required_skills_url);
-    const data = await response.json();
+    chartLoading("paid_vs_required_skills")
+
+    const response = await fetch("/data");
+    let data       = await response.json();
+
+    data = data.paid_vs_required_skills
+    stopLoading("paid_vs_required_skills")
+
 
     const svg = d3.select("#paid_vs_required_skills")
         .append("svg")
@@ -163,32 +194,30 @@ async function plotTopPaidVsReqierdSkills() {
         .range([minRadius, maxRadius]);
 
 
-    // --------------------------X axis-----------------------
-    const xScale = d3.scaleLinear()
-        .domain([0, 0])
-        .range([0, width]);
+// --------------------------X axis-----------------------
+const xScale = d3.scaleLinear()
+    .domain([0, 0])
+    .range([0, width]);
 
-    svg.append("g")
-        .attr("class", "x-axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale)
-                .ticks(7)
-                .tickFormat(d3.format(".2s")))
+svg.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(xScale)
+        .ticks(7)
+        .tickFormat(d3.format(".2s")))
+    .attr("opacity", "0");
+// -------------------------------------------------------
 
-        .attr("opacity", "0");
-    // -------------------------------------------------------
+// -------------------------Y axis-------------------------
+const yScale = d3.scaleLinear()
+    .domain([0, d3.max(data.appending_count) * 1.5])
+    .range([height, 0]);
 
+svg.append("g")
+    .attr("class", "y-axis")
+    .call(d3.axisLeft(yScale));
+// ---------------------------------------------------------
 
-    // -------------------------Y axis-------------------------
-    const yScale = d3.scaleLinear()
-        .domain([0, d3.max(data.appending_count)])
-        .range([height, 0]);
-
-    svg.append("g")
-        .attr("class", "y-axis")
-        .call(d3.axisLeft(yScale)
-                .ticks(3));
-    // ---------------------------------------------------------
 
 
     // --------------------Making the tooltip--------------------
@@ -239,10 +268,10 @@ async function plotTopPaidVsReqierdSkills() {
         .enter().append("circle")
         .attr("class", "dot")
         .attr("cx", (d, i) => xScale(data.avg_salary[i]))
-        .attr("cy", (d, i) => yScale(data.appending_count[i] + 15))
+        .attr("cy", (d, i) => yScale(data.appending_count[i]) + calculateQuantile(data.appending_count, .6))
         .attr("r", (d, i) => radiusScale(data.avg_salary[i]))
-        .style("fill", (d, i) => data.avg_salary[i] > calculateQ3(data.avg_salary) ? main_color : "gray")
-        .attr('class', (d, i) => data.avg_salary[i] > calculateQ3(data.avg_salary) ? "svg-shadow" : "gray")
+        .style("fill", (d, i) => data.avg_salary[i] > calculateQuantile(data.avg_salary, .75) ? main_color : "gray")
+        .attr('class', (d, i) => data.avg_salary[i] > calculateQuantile(data.avg_salary, .75) ? "svg-shadow" : "gray")
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
@@ -256,7 +285,7 @@ async function plotTopPaidVsReqierdSkills() {
 
     svg.append("text")
         .attr("class", "plot-title")
-        .attr("x", (svgWidth / 2) - TitleShiftConst  )
+        .attr("x", (svgWidth / 2) - TitleShiftConst)
         .attr("y", -margin.top / 2)
         .attr("text-anchor", "middle")
         .text(titleText);
@@ -280,15 +309,15 @@ async function plotTopPaidVsReqierdSkills() {
         .delay(function(d, i) { return (i * 3); })
         .duration(3000)
         .attr("cx", (d, i) => xScale(data.avg_salary[i]))
-        .attr("cy", (d, i) => yScale(data.appending_count[i] + 15))
+        .attr("cy", (d, i) => yScale(data.appending_count[i] + calculateQuantile(data.appending_count, .6)))
         .attr("opacity", "1");
 
     svg.selectAll("circle")
         .transition()
-        .delay(3000) // Wait for the first transition to finish
+        .delay(3000)
         .duration(3000)
         .attr("cx", (d, i) => xScale(data.avg_salary[i]))
-        .attr("cy", (d, i) => yScale(data.appending_count[i] + 15))
+        .attr("cy", (d, i) => yScale(data.appending_count[i] + calculateQuantile(data.appending_count, .6)))
         .attr("opacity", "1")
     // ------------------------------------------------------------
 
@@ -309,12 +338,15 @@ async function plotTopPaidVsReqierdSkills() {
 
 
 // ==========================People earned more than 1,000 on Upwork Pictogram==========================
-people_who_earned_money_url = "/data/people_who_earned_money";
+async function plotPeopleWhoEaredMoneyPictogram() {
 
-async function plotPeopleWhoEarnedMoneyPictogram() {
+    chartLoading("people_who_earned_money")
 
-    const response = await fetch(people_who_earned_money_url);
-    let data = await response.json();
+    const response = await fetch("/data");
+    let data       = await response.json();
+
+    data = data.people_who_earned_money
+    stopLoading("people_who_earned_money")
 
     const earnedMoneyPercentage = data['people_earned_money_percentage'][0];
     const didntEarnMoneyPercentage = data['people_didnt_earn_money_percentage'][0];
@@ -398,14 +430,16 @@ async function plotPeopleWhoEarnedMoneyPictogram() {
 
 
 // =========================Total Jobs Per Industry Stacked single column chart=========================
-total_jobs_per_industry_url = "/data/total_jobs_per_industry_data";
-
 async function plotTotalJobsPerIndustry() {
 
+    chartLoading("total_jobs_per_industry")
 
     // -----------------Preparing the chart data & main SVG-------------------
-    const response = await fetch(total_jobs_per_industry_url);
-    const data = await response.json();
+    const response = await fetch("/data");
+    let data = await response.json();
+
+    data = data.total_jobs_per_industry
+    stopLoading("total_jobs_per_industry")
     
     const svg = d3.select("#total_jobs_per_industry")
         .append("svg")
@@ -415,30 +449,10 @@ async function plotTotalJobsPerIndustry() {
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
     let chart_data = {'total_jobs': [],
-                'industry': []}
+                    'industry': []}
 
-    for (let i = 0; i < data.industry.length; i++) {
-
-        let industry = data.industry[i];
-        let total_jobs =   data.total_jobs[i];
-        
-        if (total_jobs > 700) {
-            total_jobs = 500
-
-        } else if (total_jobs > 400) {
-            total_jobs *= .8
-
-        } else if (total_jobs < 200) {
-            total_jobs *= 1.6
-        }
-
-        if (industry.length > maxStringSize) {
-            industry = industry.slice(0, maxStringSize - 6).concat("...")
-        }
-
-        chart_data.industry   .push(industry);
-        chart_data.total_jobs .push(total_jobs);
-        }
+    chart_data.industry = data.industry
+    chart_data.total_jobs = normalizeArray(data.total_jobs);
     // -----------------------------------------------------------------------
 
 
@@ -488,8 +502,7 @@ async function plotTotalJobsPerIndustry() {
         .attr('y', (d) => (d < 300) ? (yScale(0) - yScale(d)/textVericalShiftFactor) : yScale(0) - yScale(d))
         .attr('x', (margin.right))
         .attr('dy', -10)
-        .text((d, i) => `${data.industry[i]}`
-            .concat(' '.repeat(maxStringSize - data.industry[i].length)))
+        .text((d, i) => (data.industry[i].length >= maxStringSize) ? `${data.industry[i].slice(0, maxStringSize - 3)}...`: data.industry[i])
         
 
     groups.append('text')
@@ -524,9 +537,3 @@ async function plotTotalJobsPerIndustry() {
     // -----------------------------------------------------------------------
 }
 // =====================================================================================================
-
-
-plotSalaryPerJobTitle(); 
-plotTopPaidVsReqierdSkills();
-plotPeopleWhoEarnedMoneyPictogram();
-plotTotalJobsPerIndustry();

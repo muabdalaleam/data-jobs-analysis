@@ -2,21 +2,21 @@ import os
 import pandas as pd
 import numpy  as np
 
-from collections   import Counter
-from dotenv        import load_dotenv
-from flask         import (Flask, render_template, request,
-                            jsonify, send_from_directory)
-from google.cloud  import bigquery
+from collections     import Counter
+from dotenv          import load_dotenv
+from flask           import (Flask, render_template, request,
+                            jsonify, send_from_directory, session)
+from google.cloud    import bigquery
 
 app = Flask(__name__, template_folder='templates')
 
 load_dotenv()
+
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../credentials.json'
-client = bigquery.Client()
+client = bigquery.Client()  
 
 data_formatter = lambda data: {key: list(inner_dict.values()) for key, inner_dict in data.items()}
-
-
 
 def execute_query(query):
     df = client.query(query).to_dataframe()
@@ -30,19 +30,33 @@ def execute_query(query):
 def index():
     return render_template('index.html')
 
-@app.route('/data', methods=['POST'])
-async def main():
+@app.route('/dashboard')
+def dashboard():
+    return render_template('index.html')
 
-    global selected_country
-    global selected_job_title
+@app.route('/report')
+def report():
+    return render_template('report.html')
 
-    data = request.get_json()
-    selected_country = data.get('country')
-    selected_job_title = data.get('job_title')
-    
-    print(f"Selected country: {selected_country}")
-    print(f"Selected job title: {selected_job_title}")
 
+@app.route('/dropdown_data', methods=['POST'])
+def dropdown_data():
+
+    data = request.json
+    session['job_title'] = data['job_title']
+    session['country'] = data['country']
+
+    print(data)
+    return ''
+
+
+@app.route('/data', methods=['GET'])
+def main():
+
+    country = session.get('country')
+    job_title = session.get('job_title')
+
+    # print(country)
 
     #------------------------ Salary per job title bar chart data-------------------------
     salary_per_job_title_query = f'''
@@ -51,11 +65,9 @@ async def main():
         FROM data_jobs_analysis_db.linkedin_jobs
         WHERE   salary > 100 AND
                 salary < 200000 AND
-                country = {selected_country}
+                country = \'{country}\'
         GROUP BY job_title
         ORDER BY avg_salary DESC;'''
-
-    salary_per_job_title_data = await execute_query(salary_per_job_title_query)
     # ------------------------------------------------------------------------------------
 
 
@@ -64,24 +76,9 @@ async def main():
         SELECT  *
         FROM data_jobs_analysis_db.linkedin_jobs
         WHERE   salary > 100 AND
-                salary < 200000 AND 
-                country = {selected_country} AND
-                job_title = {selected_job_title};'''
-
-    paid_vs_required_skills_data = await execute_query(paid_vs_required_skills_query)
-
-    skills_list = np.concatenate(paid_vs_required_skills_data['skills'])
-    salary_list = paid_vs_required_skills_data['salary']
-
-    paid_vs_required_skills_data = pd.DataFrame({'skill': skills_list,
-                                                'avg_salary': np.repeat(salary_list, [len(s) for s in paid_vs_required_skills_data['skills']]),
-                                                'appending_count': np.ones(len(skills_list))})
-
-    paid_vs_required_skills_data = data_formatter(paid_vs_required_skills_data.groupby('skill').agg({
-            'avg_salary': 'mean',
-            'appending_count': 'sum'
-        }).reset_index().to_dict()
-    )
+                salary < 200000 AND
+                country = \'{country}\' AND
+                job_title = \'{job_title}\';'''
     # ------------------------------------------------------------------------------------
 
 
@@ -99,10 +96,8 @@ async def main():
             END) / COUNT(*) * 100  AS people_didnt_earn_money_percentage
 
         FROM `data-jobs-analysis-db.data_jobs_analysis_db.upwork_profiles`
-        WHERE job_title = {selected_job_title};
+        WHERE job_title = \'{job_title}\';
     # '''
-
-    people_who_earned_money_data = await execute_query(people_who_earned_money_query)
     # ------------------------------------------------------------------------------------
 
 
@@ -110,18 +105,35 @@ async def main():
     total_jobs_per_industry_query = f'''
         SELECT COUNT(*) AS total_jobs, industry
         FROM `data-jobs-analysis-db.data_jobs_analysis_db.linkedin_jobs`
-        WHERE country = {selected_country} AND
-            job_title = {selected_job_title}
-
+        WHERE job_title = \'{job_title}\' AND
+                country = \'{country}\'
         GROUP BY industry
         HAVING industry IS NOT NULL
         ORDER BY total_jobs DESC
-        LIMIT 6;
-    # '''
-
-    total_jobs_per_industry_data = await execute_query(total_jobs_per_industry_query)
+        LIMIT 6;'''
     # ------------------------------------------------------------------------------------
 
+
+
+
+    # --------------------------------Executing the queries-------------------------------
+    salary_per_job_title_data    = execute_query(salary_per_job_title_query)
+    paid_vs_required_skills_data = execute_query(paid_vs_required_skills_query)
+    people_who_earned_money_data = execute_query( people_who_earned_money_query)
+    total_jobs_per_industry_data = execute_query(total_jobs_per_industry_query)
+
+    skills_list = np.concatenate(paid_vs_required_skills_data['skills'])
+    salary_list = paid_vs_required_skills_data['salary']
+
+    paid_vs_required_skills_data = pd.DataFrame({'skill': skills_list,
+                                                'avg_salary': np.repeat(salary_list, [len(s) for s in paid_vs_required_skills_data['skills']]),
+                                                'appending_count': np.ones(len(skills_list))})
+
+    paid_vs_required_skills_data = data_formatter(paid_vs_required_skills_data.groupby('skill').agg({
+            'avg_salary': 'mean',
+            'appending_count': 'sum'
+        }).reset_index().to_dict())
+    # ------------------------------------------------------------------------------------
 
     return jsonify({"salary_per_job_title"    : salary_per_job_title_data,
                     "paid_vs_required_skills" : paid_vs_required_skills_data,

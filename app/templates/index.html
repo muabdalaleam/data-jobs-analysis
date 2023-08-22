@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data jobs analysis app</title>
+    <title>Data jobs analysis dashboard</title>
     <link rel="icon" type="image/x-icon" href="../static/assets/logo.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
     <link rel="stylesheet" type="text/css" href="../static/style.css"/>
 </head>
 
 <body>
 
     <nav class="navbar">
-        <button class="navbar-button navbar-button-left">AI Jobs Bot</button>
+        <a class="navbar-button navbar-button-left" href="/report">Report</a>
 
-        <h1 class="navbar-title">Data Jobs Analysis App</h1>
+        <h1 class="navbar-title">Data Jobs Analysis Dashboard</h1>
         
-        <button class="navbar-button navbar-button-right button-selected">Dashboard</button>
+        <a class="navbar-button navbar-button-right button-selected">Dashboard</a>
     </nav>
 <!-- 
     <div id="chart"></div>
@@ -35,21 +36,21 @@
         </div>
 
         <div class="grid-item">
-            <form action="/dropdown_data" method="post"></form>
+            <form action="/dropdown_data" method="POST">
                 <label>Select a Job title:</label>
                 <select id="job_title">
-                    <option value="\'Data analyst\'">Data Analyst</option>
-                    <option value="\'Data engineer\'">Data Engineer</option>
-                    <option value="\'ML developer\'">ML Developer</option>
-                    <option value="\'Data scientist\'">Data Scientist</option>
-                    <option value="\'Data entry\'">Data Entry</option>
+                    <option value="Data analyst">Data Analyst</option>
+                    <option value="Data engineer">Data Engineer</option>
+                    <option value="ML developer">ML Developer</option>
+                    <option value="Data scientist">Data Scientist</option>
+                    <option value="Data entry">Data Entry</option>
                 </select>
 
                 <label style= "margin-top: 20px;">Select a country:</label>
 
                 <select id="country">
-                    <option value="\'United States\'">United States</option>
-                    <option value="\'European Union\'">European Union</option>
+                    <option value="United States">United States</option>
+                    <option value="European Union">European Union</option>
                 </select>
             </form>
         </div>
@@ -62,8 +63,27 @@
             <div id="total_jobs_per_industry" ></div>
         </div>
 
-        <div class="grid-item transparent-card">
         
+        <div class="grid-item transparent-card">
+            <a href="https://www.youtube.com/channel/UCuELdkt9SNpvzI0y7lvkQEw" class="icon" target="_blank" style= "margin-top: 0px;">
+
+                <span><i class="fa-brands fa-youtube fa-2xl" style="color: #51fcc0;"></i></span></a>
+            <span class="text">My YouTube Channel</span>
+
+            <a href="https://google.com" class="icon" target="_blank">
+                <span><i class="fa-solid fa-chart-simple fa-2xl" style="color: #51fcc0;"></i></span></a>
+
+            <span class="text">Power BI Dashboard</span>
+
+            <a href="https://github.com/muhammed-abdelaleam/Data-jobs-analysis" class="icon" target="_blank">
+                <span><i class="fa-brands fa-github fa-2xl" style="color: #51fcc0;"></i></i></span></a>
+
+            <span class="text">Project Repo</span>
+
+            
+            <a href="https://google.com" class="icon" target="_blank">
+                <span><i class="fa-solid fa-newspaper fa-2xl" style="color: #51fcc0;"></i></i></span></a>
+            <span class="text">Project Documentation</span>
         </div>
     </div>
 

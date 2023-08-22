@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data jobs analysis report</title>
+    <link rel="icon" type="image/x-icon" href="../static/assets/logo.png">
+    <link rel="stylesheet" type="text/css" href="../static/report-style.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/style.css"/>
+</head>
+<body>
+    <nav class="navbar">
+        <a class="navbar-button navbar-button-left button-selected">Report</a>
+            <h1 class="navbar-title">Data Jobs Analysis Report</h1>
+        <a class="navbar-button navbar-button-right" href="/dashboard">Dashboard</a>
+    </nav>
+
+    <center><div class="report">
+        <span class="colored-link">Welcome</span>, In my humble analysis to the "Data Jobs & Freelance Market Analysis" where I try to find trends and insights to help<br>
+        other data nerds to know more about their major.<br><br>
+        <h3>Table of contents:</h3>
+        <table>
+            <thead>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Questions I have asked.</td>
+                <td><a class="colored-link" href="#questions">Here</a></td>
+            </tr>
+            <tr>
+                <td>Anwsering Freelance questions.</td>
+                <td><a class="colored-link" href="#freelance-questions">Here</a></td>
+            </tr>
+            <tr>
+                <td>Anwsering Jobs questions.</td>
+                <td><a class="colored-link" href="#jobs-questions">Here</a></td>
+            </tr>
+            <tr>
+                <td>Power BI dashboard & Web App investigation.</td>
+                <td><a class="colored-link" href="#dashboards">Here</a></td>
+            </tr>
+            <tr>
+                <td>Extra conclusions & summary.</td>
+                <td><a class="colored-link" href="#conclusions">Here</a></td>
+            </tr>
+            </tbody>
+        </table><br><br>
+
+
+        <h3 id="questions">Questions I have asked:</h3><br>
+        To ask those questions I have tryed my best to use data analytics <span class="colored-link">SMART</span> mehtod (Specific, Measurable, Action-oriented, Relevant & Time bound)
+        So they can give us more accurate & relevant answers and here are all of the project questions:<br><br>
+        <ol>
+            <li> How many jobs are <span class="colored-link">Available</span> per country and per profession on Likedin?
+            <li> What's the <span class="colored-link">Ratio</span> between people who earned money on UpWork Vs Guru?
+            <li> Average <span class="colored-link">Salary</span> per profession and per country on LinkedIn?
+            <li> What are <span class="colored-link">Top</span> 5 people in earnings amount most frequent words in their describtions?
+            <li> What are <span class="colored-link">Worst</span> 5 people in earnings amount most frequent words in their describtions?
+            <li> What Skills are <span class="colored-link">Appending</span> the most in job describtions per proffesion
+            <li> <span class="colored-link">Correlation</span> between Earnings amount, Years of Exp, Earnings & Feedback in Upwork.
+            <li> Does years of <span class="colored-link">Experience</span> affect the earnings amount positively?
+            <li> Does the  <span class="colored-link">Consultation</span> offering affect the Earnings amount positively?
+            <li> What are Top 3 countries in total freelancers <span class="colored-link">Earnings</span> Vs Top 3 countries in freelancers <span class="colored-link">Count</span>?
+            <li> What's the most common <span class="colored-link">Employment</span> type per proffision?
+            <li> What's the most common <span class="colored-link">Location</span> type per proffision
+            <li> What's the <span class="colored-link">Average</span> Guru earnings per proffision excluding zero earnings?
+            <li> What are the top skills in average <span class="colored-link">Earnings</span> on UpWork?
+            <li> What are the most <span class="colored-link">Common</span> earnings amounts (earnings amounts distrbution) on Upwork.
+            <li> Correlation between <span class="colored-link">Hour rate</span> and Avg earnings on Upwork.
+            <li> What's the average <span class="colored-link">Years of Exp</span> on upwork per proffision and per country
+            <li> Correlation between skills pay and <span class="colored-link">Appending</span> count in job describtions?
+            <li> How many jobs are available per <span class="colored-link">Industry</span> and what are the top 10 ones. 
+        </ol><br><br>
+
+
+
+
+        <!-- ###################################Anwsering Freelance questions################################### -->
+            <h3 id="freelance-questions">Anwsering Freelance questions:</h3><br>
+
+            <!-- ================================First Awnser================================ -->
+            Here we will anwser the questions that we didn't anwser in the Web app or the Dashboard because I have special sections just for them 
+            so here I will anwser only <span class="colored-link">some of the freelance questions</span> in the list above and not all of the freelance questions because
+            some of them will be anwsered in the Dashboard or the Web app.<br><br>
+
+            Now let's start with the <span class="colored-link">First</span> question which was asking about the ratio between the people who earned money and who didn't 
+            in upwork vs guru this question will help up determine which platfrom to use when you are starting and here is a visualization
+            to help us understand that better.
+
+            <div class="image-gallery">
+                <img src="../static/assets/plots/people-who-earned-money-per-platform-ratio.png" alt="people-who-earned-money-per-platform-ratio"> 
+            </div><br>
+            
+
+            Oh we can see a really huge difference between Upwork and Guru in terms of possibility to earn money we can find that Upwork has
+            <span class="colored-link">%1600</span> more chance to earn money than Guru which means that Upwork is really less compitative and 
+            easier to start with where Guru has really rare chance to earn money on.<br>
+            this insight is genrlized between all professions and for more spesfic visuals you can go for the dashboard and the web app.<br><br>
+            <!-- ========================================================================== -->
+
+
+
+            <!-- ============================Second & Third Anwser========================== -->
+            Now let's anwser the <span class="colored-link">Second</span> and <span class="colored-link">Third</span> question which is 
+            what are the most popular words that top and least frealancers put in their describtions this anwser may help us find what
+            words you should place in your describtion and also it may be used as cool piece of data art and here's it:
+
+            <div class="image-gallery">
+                <img src="../static/assets/plots/top-and-least-5-freelancers-describtions-wordcloud.png" alt="top-and-least-5-freelancers-describtions-wordcloud"> 
+            </div><br>
+
+            I know this chart maybe hard to understand but if took your time to understand it you'll find that Top freelancers use words that indicate how can 
+            they help you so you'll find words like: [Solution, Service, Development,Quality, Lead] where the least freelancers don't mention how can they help
+            you ,instead they focus completly on their hard skills so if you want to earn more money as data nerd freelancer don't forget to mention <span class= "colored-link"> How can you
+            help</span> your client in detail before mentioning your skills.<br>
+            also we can find that top freelancers are mentioning <span class= "colored-link">Rare</span> skils rather than mentioning their easy skills so they mention skills that make them 
+            deffrint so should you.<br><br>
+            <!-- ========================================================================== -->
+
+
+
+            <!-- ================================Fourth Anwser============================= -->
+            Now with the <span class= "colored-link">Fourth & Fifth</span> question which asks about the correlation between the Years of Exp, Earnings & Feedback this question
+            is really important because it will make us understand Three things:
+            <ul>
+                <li>How much years of experience you need to join data jobs freeelance market.
+                <li>How much does each feature affect each other.
+                <li>Is the Earnings amount affected positivly by the feedback .
+            </ul>
+            And here are the charts:
+            <div class="image-gallery">
+                <img src="../static/assets/plots/exp-years-vs-earnings.png" alt="exp-years-vs-earnings" style="max-width: 60%;"> 
+                <img src="../static/assets/plots/upwork-features-corr-heatmap.png" alt="upwork-features-corr-heatmap" style="max-width: 38%;"> 
+            </div><br>
+            I know that the chart on th right may be a bit hard but we will explaint it now let's start from the chart on the left we can find that 
+            the least <span class= "colored-link">Two years</span> of experience to start getting money but that money won't be as high as if you have 
+            four years of experience but after Four or Five years of experience the earnings won't get affeccted that much.<br><br>
+
+            and from the second chart we can find more insights and if you don't understand it you can search for: <a class= "colored-link" href= "https://www.simplilearn.com/tutorials/statistics-tutorial/spearmans-rank-correlation">Spearman correlation coefficient</a>
+            first insight we can get is that the Earnings amount is correlated strongly to Experience years  with <var>p= 0.34</var> which mean that the years of experience can make
+            you get more earnings<br><br>
+
+            Also we can find an unexpected conclusion which is that there isn't any correlation between feedback and the earnings amount 
+            with <i>P < 0.05</i> and we can find that there's a <span class= "colored-link">weak</span> correlation between Feedback and Experience years<br><br>
+            <!-- ========================================================================== -->
+
+
+
+            <!-- ================================Fifth Anwser============================== -->
+            The <span class= "colored-link">Sixth</span> question now asks does the consultation offering affect the Earnings amount positively which will
+            lead us to know if it's worth it to spent an hour with your client before the buy process and here's a visualization for that:
+            <div class="image-gallery">
+                <img src="../static/assets/plots/earnings-vs-offering-consultation.png" alt="earnings-vs-offering-consultation" style="max-width: 60%;"> 
+            </div><br>
+            We can find from this chart that it's worth it to offer consultation on you project because we can find about <span class= "colored-link">%45</span>
+            increase in total earnings for people who offers consultations vs people who didn't.<br><br>
+            <!-- ========================================================================== -->
+
+
+
+            <!-- ================================Sixth Anwser============================== -->
+            Now with the <span class= "colored-link">Seventh</span> question asking what are top countries in profiles count vs top countries in total earnings
+            per freelancing platform which will learn us about any region bias for those platforms and here are a couble of visuals to understand that better:
+
+            <div class="image-gallery">
+                <img src="../static/assets/plots/top-10-countries-in-total-earnings-per-platform.png" alt="top-10-countries-in-total-earnings" style="max-width: 80%;"> 
+                <img src="../static/assets/plots/top-10-countries-in-users-count-per-platform.png" alt="top-10-countries-in-users-count" style="max-width: 80%;"> 
+            </div><br>
+
+            We can find from the Guru visuals that it's really biased towards People from "United States" with large gap between it and the other countries
+            infact the most profiles are from "India" with about half of the accounts but it's about <span class= "colored-link">1/6</span> of top 10 countries
+            total earnings amount where the US has the half.<br>
+            Where UpWork Doesn't have any bias towards any country and seamly has fair chance.<br><br>
+            <!-- ========================================================================== -->
+        <!-- ################################################################################################### -->
+
+
+
+        <!-- ######################################Anwsering Jobs questions##################################### -->
+        <h3 id="jobs-questions">Anwsering Jobs questions:</h3><br>
+
+        <!-- ==============================First question============================== -->
+        Here also as the section before we will anwser the questions we can awnser without the Dashboard or the Web app and now let's start
+        with the <span class= "colored-link">First</span> question which asks for how many <span class= "colored-link">Jobs Postings</span> are available per proffision and per country so we can see how compatitive
+        each job title is in a nutshell and here's a visualization for that:
+        <div class="image-gallery">
+            <img src="../static/assets/plots/available-jobs-per-job-title-and-country.png" alt="jobs-per-job-title-and-country" style="max-width: 70%;"> 
+        </div><br>
+        We can find from this visual that the <span class= "colored-link">Data Entry</span> Jobs are the most common ones where <span class= "colored-link">ML developer</span> jobs are the least
+        Appearing ones and also we can find that the 'US' has really higher Appending counts than the 'EU' especially in the 
+        'Data Entry & Data Analyst' Jobs.<br><br>
+        <!-- ========================================================================== -->
+
+
+        <!-- =============================Second question============================== -->
+        And now with <span class= "colored-link">Second</span> question and the most hot one asking what's the <span class= "colored-link">Average Salary</span> per country and profession which
+        is one of the most popular questions about the data jobs and now let's look at the graph:
+        <div class="image-gallery">
+            <img src="../static/assets/plots/median-salary-per-job-title-and-country.png" alt="salary-per-job-title-and-country" style="max-width: 70%;"> 
+        </div><br>
+
+        Oh We can find from this plot that the <span class= "colored-link">ML developer</span> is the most paid job and then the data scientist and the data engineer jobs and you can find a really
+        cool unexpected insight if you looked at the chart above you'll find that the more the jobs postings for a job title is the less the salary and vica versa
+        which makes the ML developer jobs the most paid jobs.<br><br>
+        <!-- ========================================================================== -->
+
+
+        <!-- =============================Third question============================== -->
+        Now let's see the <span class= "colored-link">Third</span> question which is: "What are the top 10 appending skills per job title?" this question will make us
+        know what skills are must for each proffesion so you have more chance to get your application accepted and now with the chart:
+        <div class="image-gallery">
+            <img src="../static/assets/plots/top-10-appending-skills-per-job-title.png" alt="top-10-appending-skills-per-job-title" style="max-width: 70%;"> 
+        </div><br>
+        Now you can find the top requierd skills in your major but any way we can find that Python is a must (or requird sometimes) skill exept in the data entry
+        jobs and also we can find also relly cool insight that <span class= "colored-link">SQL</span> is more requird than Excel in data analyst jobs.<br><br>
+        <!-- ========================================================================== -->
+
+
+        <!-- =============================Fourth question============================= -->
+        And Here's the <span class= "colored-link">Fourth</span> question in the jobs analysis asking What's the most common Employment type per proffision 
+        and I mean with Employment type the Type of the job nature wither it's Full time, Part time or Intern etc .. this question will make us know what are the
+        most common job type per job title
+        <div class="image-gallery">
+            <img src="../static/assets/plots/employment-type-count-distribution.png" alt="employment-type-count-distribution" style="max-width: 70%;"> 
+        </div><br>
+        We can find that <span class= "colored-link">Full time</span> Jobs are the most popular per each job title and some times the Contractor jobs gets the second place or Part time ones
+        I know we couldn't get that much insights as the questions above but still this info may be useful.<br><br>
+        <!-- ========================================================================== -->
+
+
+        <!-- ===============================Fifth question============================= -->
+        And now with at last but not least with the <span class= "colored-link">Fifth</span> saying What's the most common Location type per proffision
+        (like: Remotly, Hybrid, From office) which will help us know each proffision most popular work nature with the help of the question above and now
+        with the chart:<br>
+        <div class="image-gallery">
+            <img src="../static/assets/plots/location-type-count-distribution.png" alt="location-type-count-distribution" style="max-width: 70%;"> 
+        </div><br>
+        We can find that all of the proffisions have the most of the jobs postings as <span class= "colored-link">Remote</span> jobs except Data entry jobs and also we can find
+        that Data analyst and Data scientist jobs have more chance to be Remote.<br><br>
+        <!-- ========================================================================== -->
+        <!-- ################################################################################################### -->
+
+
+
+        <!-- ##############################Power BI dashboard & Web App investigatio############################ -->
+        <h3 id="dashboards">Power BI dashboard & Web App investigation:</h3><br>
+
+        Hello here in this section for sorry I can't give to you any written insights but I will write some conclusions in the 
+        conclusions section from the dashboards so please go to them however the questions that we didn't anwsered in the last two
+        sections are anwsered in them also they have more intercativity like drop downs, hover effect etc ...<br><br>
+
+        I createed those two dashboards so I can have more interactive and fun way to see this data instead of using the report only
+        because it can be boring sometimes in those dashboards I tries my best to anwser question I haven't anwsered in the report
+        but still there are some of the anwsers are repeated.<br><br>
+
+        And now let's see some of the screenshots
+
+        <div class="image-gallery">
+            <img src="../static/assets/screenshots/web-dashboard-1.png" alt="location-type-count-distribution" style="max-width: 40%;"> 
+            <img src="../static/assets/screenshots/web-dashboard-2.png" alt="location-type-count-distribution" style="max-width: 40%;"> 
+        </div>
+        <div class="image-gallery">
+            <img src="../static/assets/screenshots/power-bi-2.png" alt="location-type-count-distribution"> 
+        </div><br><br>
+
+        <!-- ################################################################################################### -->
+
+
+
+        <!-- #####################################Extra Conclusions & Summary################################### -->
+        <h3 id="dashboards">Extra conclusions & summary:</h3><br>
+
+        In this section we will discuss extra conclusions I didn't ask questions about and summarize some of the most important
+        awnsers so let's start with the <span class= "colored-link">First</span> conclusion which is from the Web dashboard
+        which is that the more the skills are requierd the less they pay and vica versa so having skills that <span class= "colored-link">aren't requierd</span>
+        in your major will help you get more niche and High paid jobs.<br><br>
+
+
+        And the <span class= "colored-link">Second</span> one is founded from many charts in the dashboard and in the analysis
+        notebook which is that we can find <span class= "colored-link">Negative</span> non-direct correlation between how much 
+        jobs are available and it's pay because the less the job postings are for a job title the less the applications count
+        for it the more Higher the salary so we can find that <span class= "colored-link">Data entry</span> job has the most
+        job postings while having the <span class= "colored-link">Lowesr</span> salary.<br><br>
+
+
+        At last but not least the <span class= "colored-link">Third</span> conclusion is that the Data Analyst get more paid when he have some of the Data Scientist
+        and Data Engineer skills and also that makes him more hirable and get a salary that's near to Data scientist or Data Engineer
+        Pay.<br><br>
+
+
+        Now after we finished our analysis wish you now know more about the Data jobs and now you know much about it that will help
+        you get your first job so remember always to stay learning Learn each day something new and goodbye.
+
+
+        <!-- ################################################################################################### -->
+    </center>
+</body>
+</html>
