@@ -14,6 +14,7 @@ pyarrow
 html5lib
 squarify
 dash
+db-dtypes
 google
 scrapy
 google-cloud-bigquery
