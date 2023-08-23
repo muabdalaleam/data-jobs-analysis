@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 import numpy  as np
 
@@ -9,15 +10,16 @@ from flask           import (Flask, render_template, request,
 from google.cloud    import bigquery
 
 app = Flask(__name__, template_folder='templates')
-
 load_dotenv()
 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from my_encrypter import encrypt
-encrypt.decrypt_json_file('../credentials.json')
+encrypt.decrypt_json_file('credentials.json')
+
 
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '../credentials.json'
-client = bigquery.Client()  
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'credentials.json'
+client = bigquery.Client()
 
 data_formatter = lambda data: {key: list(inner_dict.values()) for key, inner_dict in data.items()}
 
@@ -143,7 +145,7 @@ def main():
                     "people_who_earned_money" : people_who_earned_money_data,
                     "total_jobs_per_industry" : total_jobs_per_industry_data})
 
-encrypt.encrypt_json_file('../credentials.json')
+encrypt.encrypt_json_file('credentials.json')
 
 if __name__ == '__main__':
     app.run(debug=True)
