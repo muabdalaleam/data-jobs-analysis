@@ -1,5 +1,4 @@
 import os
-import sys
 import pandas as pd
 import numpy  as np
 
@@ -11,10 +10,9 @@ from google.cloud    import bigquery
 
 app = Flask(__name__, template_folder='templates')
 
-sys.path.insert(1, '../my_encrypter')
 load_dotenv()
 
-import encrypt
+from my_encrypter import encrypt
 encrypt.decrypt_json_file('../credentials.json')
 
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
