@@ -1,4 +1,4 @@
-package_variable = "this is custom mosule to crypt my files with easy way"
+package_variable = "this is custom module to crypt my files with easy way"
 
 def package_function():
     print("hello in my file crypter")
