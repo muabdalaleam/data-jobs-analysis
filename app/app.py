@@ -127,6 +127,8 @@ def main():
     people_who_earned_money_data = execute_query( people_who_earned_money_query)
     total_jobs_per_industry_data = execute_query(total_jobs_per_industry_query)
 
+    print(salary_per_job_title_data)
+
     skills_list = np.concatenate(paid_vs_required_skills_data['skills'])
     salary_list = paid_vs_required_skills_data['salary']
 
