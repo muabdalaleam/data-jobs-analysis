@@ -21,3 +21,4 @@ google-cloud-bigquery
 hsluv
 wordcloud
 shapely
+db-dtypes
