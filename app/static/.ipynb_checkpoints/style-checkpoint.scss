@@ -1,0 +1,349 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&family=Montserrat+Alternates:wght@500&family=Open+Sans:wght@300&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+$card-color: #272B30;
+$grey-color: #808080;
+$bg-color: #666666;
+$primary-color: #51fcc6;
+$secondary-color: #48e0dc;
+$secondary-2-color: #5cd3f7;
+$font-size: 20px;
+$font-color: white;
+$shadow-color: rgba(43, 43, 43, 0.381);
+$transition-duration: 0.6s;
+
+body {
+  background-color: $bg-color;
+}
+
+// =====================================Creating The Navigation Bar=====================================
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: $card-color;
+  color: $font-color;
+  box-shadow: 0 4px 6px $shadow-color;
+  border: none;
+}
+
+.navbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'Open Sans', sans-serif;
+  background-color: transparent;
+  border: 5px solid $grey-color;
+  text-decoration: none;
+  font-size: $font-size;
+  color: $font-color;
+  transition: $transition-duration;
+
+  outline: none;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 20px;
+  min-width: 100px;
+  border-radius: 10px;
+
+  &:hover {
+    border-color: lighten($grey-color, 30%);
+  }
+
+  &.button-selected {
+    border: 5px solid $primary-color;
+    box-shadow: 0px 0px 8px 4px $primary-color;
+
+    &:hover {
+      border-color: lighten($primary-color, 15%);
+      box-shadow: 0px 0px 8px 4px lighten($primary-color, 15%);
+    }
+  }
+  
+
+  &.navbar-button-left {
+    margin-left: 30px;
+  }
+
+  &.navbar-button-right {
+    margin-right: 30px;
+  }
+}
+
+.navbar-title {
+  margin: 0;
+  font-weight: bold;
+  font-size: 40px;
+}
+// =======================================================================================================
+
+
+
+// ===========================Creating The Data visualization Cards & Thier Grid==========================
+.grid-container {
+  display: grid;
+  margin-top: 20px;
+  align-items: left;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 23px;
+}
+
+.grid-item {
+  height: 250px;
+
+  background-color: $card-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px $shadow-color;
+}
+
+.transparent-card {
+  background-color: $bg-color;
+  padding: 10px;
+  border-radius: 0;
+  box-shadow: 0 0 0 $bg-color;
+  display: flex;
+  justify-content: flex-start; // This will align items to the left and right
+  align-items: center; // This will vertically center items
+  color: $font-color;
+
+  .icon {
+    margin-top: 20px; // Add some spacing between the icon and text
+  }
+
+  .text {
+    margin-top: 5px;
+  }
+}
+// =======================================================================================================
+
+
+
+// =========================================Creating the Dropdown menu ===================================
+label {
+  font-size: $font-size;
+  color: $font-color;
+}
+
+select {
+  padding: 10px 60px;
+  margin: 10px 20px;
+  background-color: transparent;
+  text-align: left;
+  display:inline-block;
+  border: 2px solid $primary-color;
+  border-radius: 5px;
+  color: $font-color;
+  font-size: 17;
+  transition: $transition-duration;
+
+  & option {
+    background-color: $card-color;
+  }
+
+  &:hover, &:focus{
+    box-shadow: 0px 0px 8px 4px $primary-color;
+  }
+}
+
+form {
+  height: 230px;
+  width: 346px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+// =======================================================================================================
+
+
+
+// ==============================Some D3.js boring Staff and coloring the scroll bar======================
+.plot-title,
+.plot-text {
+    font-family: 'Open Sans', sans-serif;
+    fill: $font-color;
+
+    &.plot-title {
+        font-size: $font-size;
+    }
+}
+
+.x-axis,
+.y-axis {
+    line, path {
+        stroke: $font-color;
+    }
+
+    text {
+        fill: $font-color;
+        font-family: 'Open Sans', sans-serif;
+    }
+}
+
+.svg-shadow {
+  filter: drop-shadow(0px 0px 10px $primary-color);
+}
+
+canvas {
+    width: 380px;
+    height: 200px;
+}
+
+body::-webkit-scrollbar {
+    width: 1em;
+}
+
+body::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: $primary-color;
+}
+// =======================================================================================================
+
+
+// =======================================The chart loading animation=====================================
+// Thanks for : https://codepen.io/DylanMacnab/
+
+.loader {
+  position: relative;
+}
+
+.one {
+  position: absolute;
+  border-radius: 50%;
+  background: $grey-color;
+  opacity: .0;
+  animation: loading 1.3s .65s infinite;
+  height: 25px;
+  width: 25px;
+}
+
+.two {
+  position: absolute;
+  border-radius: 50%;
+  background: $primary-color;
+  opacity: .0;
+  animation: loading 1.3s infinite;
+  height: 25px;
+  width: 25px;
+}
+
+
+@keyframes loading {
+  0% {
+    opacity: .0;
+    transform: scale(.15);
+    box-shadow: 0 0 2px rgba(black, .1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(2);
+    box-shadow: 0 0 10px rgba(black, .1);
+  }
+  100% {
+    opacity: .0;
+    transform: scale(.15);
+    box-shadow: 0 0 2px rgba(black, .1);
+  }
+}
+// =======================================================================================================
+
+
+// =================================Creating the selectors for the report=================================
+
+
+.report {
+  margin-top: 30px;
+  width: 80vw;
+  background-color: $card-color;
+  line-height: 1.5em;
+  border-radius: 10px;
+  text-align: left;
+  padding: 10px 25px;
+  font-size: 18px;
+  color: $font-color;
+}
+
+.colored-link {
+  text-decoration: none;
+  color: $primary-color;
+  text-shadow: 0 0 10px $primary-color;
+}
+
+h3 {
+  margin-top: 20px;
+  font-size: 30px;
+  color: $font-color;
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  inline-size: calc(100% + 1rem);
+  font-size: 16px;
+  // margin-block: 3rem;
+  // margin-inline: -.5rem;
+  
+  tr {
+    border-block-end: .0625rem dotted;
+  }
+  
+  caption,
+  th,
+  td {
+    padding-block: .75rem;
+    font-size: 16px;
+    padding-inline: .5rem;
+  }
+  
+  th,
+  td {
+    text-align: left;
+  }
+  
+  th:last-child,
+  td:last-child {
+    text-align: right;
+  }
+}
+
+ul, ol {
+  margin-left: 20px;
+  line-height: 1.7em;
+}
+
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 10px; // Adjust the gap size as needed
+
+  img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px; // Rounded corners for the images
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Add a shadow effect
+  }
+
+  @media (max-width: 768px) {
+      justify-content: center;
+  }
+}
+
+// =======================================================================================================
