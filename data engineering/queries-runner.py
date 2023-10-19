@@ -1,10 +1,3 @@
-"""
-This file runs the queries in the `queries` folder in an order so they don't raise an
-   error. 
-
-Important note: the queries that will be runned are DML queries.
-"""
-
 from google.cloud import bigquery
 import pandas as pd
 import sys
