@@ -16,9 +16,9 @@ credentials_path :str = '../credentials.json'
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 
 def run_queries(query_path: str) -> None:
-    
+
     print(f'\nStarted excuting {query_path.split("/")[-1]} query.')
-    
+
     with open(query_path, 'r') as sql_file:
         queries = sql_file.read().split(';')[:-1]
 
