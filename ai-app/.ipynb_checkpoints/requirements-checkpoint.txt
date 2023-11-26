@@ -1,3 +1,7 @@
 transformers
 accelerate
 langchain
+ctransformers
+transformers
+torch
+langchain
