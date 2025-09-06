@@ -1,5 +1,0 @@
-accelerate
-langchain
-ctransformers
-transformers
-langchain
