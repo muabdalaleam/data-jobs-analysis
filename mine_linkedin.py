@@ -7,11 +7,11 @@ import csv
 from bs4 import BeautifulSoup, PageElement
 
 DATA_JOBS_TITLES = [
-    'Data entry',
-    'Data engineer',
-    'Data scientist',
-    'Data analyst',
-    'Machine learning',
+    "Data entry",
+    "Data engineer",
+    "Data scientist",
+    "Data analyst",
+    "Machine learning",
 ]
 CSV_FIELDNAMES   = [
     "id",
@@ -30,10 +30,10 @@ CSV_FIELDNAMES   = [
     "searched_country",
     "searched_job_title",
 ]
-MAX_PAGES   = 15 # per job title and country each page containts 10 jobs
+MAX_PAGES   = 10 # per job title and country each page containts 10 jobs
+MAX_RETRIES = 6
+TIMEOUT     = 60
 COUNTRIES   = ['European Union', 'United States']
-TIMEOUT     = 20
-MAX_RETRIES = 5
 HEADERS     = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
     'Accept-Encoding': '*',
@@ -76,7 +76,6 @@ class Job(NamedTuple):
     job_function: \"{self.job_function}\"
     seniority_level: \"{self.seniority_level}\"
     """
-
 
 def search_jobs(country: str, job_title: str, page: int) -> list[JobId]:
     url= "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search" + \
@@ -136,17 +135,12 @@ def scrape_job_data(id: JobId) -> Job:
     soup = BeautifulSoup(response.content, 'lxml')
 
     def scrape_content(tag: str, class_attr: str, def_val=None, get_href=False):
-        contents = soup.find(tag, attrs={"class": class_attr})
+        content = soup.find(tag, attrs={"class": class_attr})
 
-        if not(contents): # not founded
+        if not(content): # not founded
             return def_val
 
-        total_content = ""
-        for content in contents:
-            if isinstance(content, str):
-                total_content += content.strip()
-
-        return total_content
+        return content.get_text(separator="\n").strip()
 
     def scrape_criteria_item(title: str):
         job_criteria_subheader = soup.find(
@@ -154,6 +148,9 @@ def scrape_job_data(id: JobId) -> Job:
             attrs={"class": "description__job-criteria-subheader"},
             string=lambda text: text and title.lower() in text.lower()
         )
+
+        if not(job_criteria_subheader):
+            return ""
 
         parent_item = job_criteria_subheader.parent
         contents = parent_item.find("span").contents
@@ -166,20 +163,20 @@ def scrape_job_data(id: JobId) -> Job:
         return total_content
     
     job = Job(
-        id              = id,
-        posting_title   = scrape_content("h2", "top-card-layout__title"),
-        location            = scrape_content("span", "topcard__flavor--bullet"),
-        posted_since        = scrape_content("span", "posted-time-ago__text"),
-        company_name        = scrape_content("a", "topcard__org-name-link"),
-        description         = scrape_content("div", "show-more-less-html__markup"),
-        job_url             = soup.find("a", attrs={"class": "topcard__link"})["href"],
-        company_url         = soup.find("a", attrs={"class": "topcard__org-name-link"})["href"],
-        applicants          = scrape_content("figcaption", "num-applicants__caption"), # XXX:
+        id               = id,
+        posting_title    = scrape_content("h2", "top-card-layout__title"),
+        location         = scrape_content("span", "topcard__flavor--bullet"),
+        posted_since     = scrape_content("span", "posted-time-ago__text"),
+        company_name     = scrape_content("a", "topcard__org-name-link"),
+        description      = scrape_content("div", "show-more-less-html__markup"),
+        job_url          = soup.find("a", attrs={"class": "topcard__link"})["href"],
+        company_url      = soup.find("a", attrs={"class": "topcard__org-name-link"})["href"],
+        applicants       = scrape_content("figcaption", "num-applicants__caption"), # XXX:
 
-        industries          = scrape_criteria_item("Industries"),
-        employment_type     = scrape_criteria_item("Employment type"),
-        job_function        = scrape_criteria_item("Job function"),
-        seniority_level     = scrape_criteria_item("Seniority level"),
+        industries       = scrape_criteria_item("Industries"),
+        employment_type  = scrape_criteria_item("Employment type"),
+        job_function     = scrape_criteria_item("Job function"),
+        seniority_level  = scrape_criteria_item("Seniority level"),
     )
 
     return job
@@ -188,32 +185,37 @@ def main():
     aggregated_jobs: Dict[str, Dict[str, list[Job]]] = dict()
 
     for country in COUNTRIES:
+        aggregated_jobs[country] = dict()
         print(f"Scraping \"{country}\" jobs.")
-        for job_title in DATA_JOBS_TITLES:
-            print(f"Scraping \"{job_title}\" positions.")
-            current_page_index = 1
-            all_jobs_list: list[Job] = []
 
-            while current_page_index < MAX_PAGES:
+        for job_title in DATA_JOBS_TITLES:
+            aggregated_jobs[country][job_title] = []
+            print(f"Scraping \"{job_title}\" positions.")
+
+            current_page_index = 1
+            while current_page_index <= MAX_PAGES:
                 job_ids = search_jobs(country, job_title, current_page_index)
                 jobs_data = list(map(scrape_job_data, job_ids))
 
-                all_jobs_list.extend(jobs_data)
-
                 if len(jobs_data) == 0:
+                    aggregated_jobs[country][job_title] = []
                     break
 
+                aggregated_jobs[country][job_title].extend(jobs_data)
                 current_page_index += 1
 
-            aggregated_jobs[country] = {job_title: all_jobs_list}
-            print(f"Scraped {len(all_jobs_list)} jobs.\n")
+            print(f"Scraped {len(aggregated_jobs[country][job_title])} jobs.\n")
 
     with open("./data/linkedin_jobs.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
+        writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
 
         for searched_country, jobs_dict in aggregated_jobs.items():
             for searched_job_title, jobs in jobs_dict.items():
                 for job in jobs:
+                    if not(isinstance(job, Job)):
+                        continue
+
                     writer.writerow({
                     "id":              job.id,
                     "posting_title":   job.posting_title,
@@ -224,6 +226,7 @@ def main():
                     "job_url":         job.job_url,
                     "company_url":     job.company_url,
                     "applicants":      job.applicants,
+
                     "industries":      job.industries,
                     "employment_type": job.employment_type,
                     "job_function":    job.job_function,

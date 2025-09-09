@@ -10,11 +10,11 @@ import csv
 import re
 
 DATA_JOBS_TITLES = [
-    # 'Data entry',
-    # 'Data engineer',
+    'Data entry',
+    'Data engineer',
     'Data scientist',
-    # 'Data analyst',
-    # 'Machine learning', XXX:
+    'Data analyst',
+    'Machine learning'
 ]
 CSV_FIELDNAMES = [
     "id",
@@ -29,10 +29,11 @@ CSV_FIELDNAMES = [
     "hours_worked",
     "hourly_jobs_done",
     "fixed_jobs_done",
+    "searched_job_title",
 ]
 CHROMIUM_VERSION = 141  # Adjust as needed
 UPWORK_TIMEOUT = 90
-MAX_PAGES = 5
+MAX_PAGES = 13
 
 class Freelancer(NamedTuple):
     id: str
@@ -89,10 +90,12 @@ def parse_freelancer_card(card: WebElement) -> Freelancer:
             return []
 
     url = find_text("[class*=\"profile-link\"]", attribute="href")
-    id = ""
     id_pattern = re.compile(r"\~[a-z0-9]*")
-    if id_pattern.search(url):
-        id = id_pattern.group()[1:]
+    match = id_pattern.search(url)
+    if match:
+        id = match.group()[1:]
+    else:
+        id = ""
     
     name = find_text("[class*=\"profile-link\"]")
     
@@ -162,7 +165,7 @@ def main():
             f"https://www.upwork.com/nx/search/talent/?page={current_page}&q={job_title}"
         )
 
-        while current_page < MAX_PAGES:
+        while current_page <= MAX_PAGES:
             cards = scrape_freelancer_cards(driver)
             aggregated_freelancers[job_title].extend([
                  parse_freelancer_card(card) for card in cards
@@ -174,8 +177,9 @@ def main():
     driver.quit()
 
     # Saving the data
-    with open("./data/upwork_freelancers.csv") as f:
+    with open("./data/upwork_freelancers.csv", "w") as f:
         writer = csv.DictWriter(f, CSV_FIELDNAMES)
+        writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
 
         for searched_job_title, freelancers in aggregated_freelancers.items():
             for freelancer in freelancers:
@@ -192,6 +196,7 @@ def main():
                 "hours_worked":      freelancer.hours_worked,
                 "hourly_jobs_done":  freelancer.hourly_jobs_done,
                 "fixed_jobs_done":   freelancer.fixed_jobs_done,
+                "searched_job_title": searched_job_title
                 })
 
 if __name__ == "__main__":

@@ -1,0 +1,31 @@
+bs4
+selenium
+pandas
+numpy
+seaborn
+matplotlib
+cloudscraper
+
+# bs4
+# numpy
+# pandas
+# lxml
+# pandasql 
+# webdriver-manager
+# matplotlib
+# seaborn
+# gunicorn
+# python-dotenv
+# plotly
+# pyarrow
+# html5lib
+# squarify
+# dash
+# db-dtypes
+# google
+# scrapy
+# google-cloud-bigquery
+# hsluv
+# wordcloud
+# shapely
+# db-dtypes
