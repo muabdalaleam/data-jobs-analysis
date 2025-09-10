@@ -1,3 +1,11 @@
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import NoSuchElementException
+import undetected_chromedriver as uc
+
 from typing import NamedTuple, Dict, List
 from bs4 import BeautifulSoup
 import requests
@@ -26,8 +34,9 @@ CSV_FIELDNAMES = [
     "searched_job_title"
 ]
 MAX_PAGES   = 10 # by default it's 20 freelancers per page so 10 is more than enough
-MAX_RETRIES = 5
+CHROMIUM_VERSION=141
 TIMEOUT     = 60
+GURU_TIMEOUT = 60 # seconds
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
     'Accept-Encoding': '*',
@@ -46,42 +55,8 @@ class Freelancer(NamedTuple):
     member_since: str
     description: str
 
-def retrying_request(url: str) -> requests.Response:
-    response = requests.get(url, params=HEADERS, timeout=TIMEOUT)
-    retries = 0
-
-    while response.status_code != 200:
-        response = requests.get(url, params=HEADERS, timeout=TIMEOUT)
-        print(f"Failed getting \"{url}\", Retrying ...")
-        if retries >= MAX_RETRIES:
-            raise requests.HTTPError("Exceeded max retries trying to request: ", url)
-        retries += 1
-
-    return response
-
-def search_freelancer_urls(job_title : str, page: int) -> list[str]:
-    response = retrying_request(
-        url= f"https://www.guru.com/d/freelancers/skill/{job_title}/pg/{page}/"
-    )
-
-    soup = BeautifulSoup(response.content, 'html.parser')
-    pattern = re.compile(r"^/freelancers")
-
-    freelancers_headers = soup.find_all('a', href=pattern)
-    freelancers_urls = set()
-
-    for header in freelancers_headers:
-        freelancers_urls.add(header['href'])
-
-    return list(freelancers_urls)
-
-def scrape_freelancer_data(url: str) -> Freelancer:
-    response = requests.get(
-        url=f"https://www.guru.com/{url}",
-    )
-    time.sleep(1) # just to not overload thier servers
-
-    soup = BeautifulSoup(response.content, 'html.parser')
+def scrape_freelancer_data(driver: WebDriver) -> Freelancer:
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
 
     try: name = (
         soup.find("h1", class_="profile-avatar__info__name")
@@ -131,7 +106,7 @@ def scrape_freelancer_data(url: str) -> Freelancer:
     # description: str
 
     return Freelancer(
-        url= f"https://www.guru.com/{url}",
+        url= driver.current_url,
         name= name,
         location= location,
         earnings= earnings,
@@ -143,24 +118,39 @@ def scrape_freelancer_data(url: str) -> Freelancer:
         description= description,
     )
 
-def main():
-    aggregated_freelancers: Dict[str, List[Freelancer]] = dict()
+def scrape_freelancers_urls(driver: WebDriver) -> List[str]:
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    pattern = re.compile(r"^/freelancers")
+    
+    jobs_headers = soup.find_all('a', href=pattern)
+    jobs_urls = set()
+    
+    for header in jobs_headers:
+        jobs_urls.add("https://guru.com/" + header['href'])
+    
+    return list(jobs_urls)
 
+def main():
+    driver = uc.Chrome(use_subprocess=False, version_main=CHROMIUM_VERSION, headless=True)
+
+    aggregated_freelancers: Dict[str, List[Freelancer]] = dict()
     for job_title in DATA_JOBS_TITLES:
         print(f"Scraping \"{job_title}\" freelancers.")
         aggregated_freelancers[job_title] = []
-
         current_page = 1
+
         while current_page <= MAX_PAGES:
-            urls = search_freelancer_urls(job_title, current_page)
-            aggregated_freelancers[job_title].extend([
-                scrape_freelancer_data(url) for url in urls
-            ])
+            driver.get(f"https://www.guru.com/d/freelancers/skill/{job_title}/pg/{current_page}/")
+            urls = scrape_freelancers_urls(driver)
+            print(urls)
+            for url in urls:
+                driver.get(url)
+                aggregated_freelancers[job_title].append(
+                    scrape_freelancer_data(driver))
+
             current_page += 1
-
-        print(f"{job_title} URls: \n {urls} \n")
-
-    print(f"Scraped {len(aggregated_freelancers[job_title]) * len(DATA_JOBS_TITLES)} freelancers.\n")
+ 
+        print(f"Scraped {len(aggregated_freelancers[job_title])} freelancers.\n")
 
     with open("./data/guru_freelancers.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
@@ -184,3 +174,41 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# def main():
+#     aggregated_freelancers: Dict[str, List[Freelancer]] = dict()
+# 
+#     for job_title in DATA_JOBS_TITLES:
+#         print(f"Scraping \"{job_title}\" freelancers.")
+#         aggregated_freelancers[job_title] = []
+# 
+#         current_page = 1
+#         while current_page <= MAX_PAGES:
+#             urls = search_freelancer_urls(job_title, current_page)
+#             aggregated_freelancers[job_title].extend([
+#                 scrape_freelancer_data(url) for url in urls
+#             ])
+#             current_page += 1
+# 
+# 
+#     print(f"Scraped {len(aggregated_freelancers[job_title]) * len(DATA_JOBS_TITLES)} freelancers.\n")
+# 
+#     with open("./data/guru_freelancers.csv", "w") as f:
+#         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
+#         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
+#         
+#         for searched_job_title, freelancers in aggregated_freelancers.items():
+#             for freelancer in freelancers:
+#                 writer.writerow({
+#                 "url": freelancer.url,
+#                 "name": freelancer.name,
+#                 "location": freelancer.location,
+#                 "earnings": freelancer.earnings,
+#                 "feedback_percent": freelancer.feedback_percent,
+#                 "skills": freelancer.skills,
+#                 "transactions_completed": freelancer.transactions_completed,
+#                 "employers_count": freelancer.employers_count,
+#                 "member_since": freelancer.member_since,
+#                 "description": freelancer.description,
+#                 "searched_job_title": searched_job_title,
+#                 })

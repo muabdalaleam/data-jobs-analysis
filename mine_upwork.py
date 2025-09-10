@@ -65,6 +65,7 @@ class Freelancer(NamedTuple):
                 f"Fixed Jobs Done: {self.fixed_jobs_done}")
 
 def parse_freelancer_card(card: WebElement) -> Freelancer:
+    # XXX: the code is really really messy. 
     def find_text(selector: str, attribute: str = "text", method="css") -> str:
         try:
             if method == "xpath":
@@ -162,7 +163,7 @@ def main():
         aggregated_freelancers[job_title] = []
 
         driver.get(
-            f"https://www.upwork.com/nx/search/talent/?page={current_page}&q={job_title}"
+            f"https://www.upwork.com/nx/search/talent/?page=1&q={job_title}"
         )
 
         while current_page <= MAX_PAGES:
