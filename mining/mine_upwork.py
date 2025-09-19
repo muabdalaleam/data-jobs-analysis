@@ -178,7 +178,7 @@ def main():
     driver.quit()
 
     # Saving the data
-    with open("./data/upwork_freelancers.csv", "w") as f:
+    with open("../data/upwork_freelancers.csv", "w") as f:
         writer = csv.DictWriter(f, CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
 

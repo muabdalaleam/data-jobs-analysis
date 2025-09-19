@@ -152,7 +152,7 @@ def main():
  
         print(f"Scraped {len(aggregated_freelancers[job_title])} freelancers.\n")
 
-    with open("./data/guru_freelancers.csv", "w") as f:
+    with open("../data/guru_freelancers.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
         
@@ -174,41 +174,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# def main():
-#     aggregated_freelancers: Dict[str, List[Freelancer]] = dict()
-# 
-#     for job_title in DATA_JOBS_TITLES:
-#         print(f"Scraping \"{job_title}\" freelancers.")
-#         aggregated_freelancers[job_title] = []
-# 
-#         current_page = 1
-#         while current_page <= MAX_PAGES:
-#             urls = search_freelancer_urls(job_title, current_page)
-#             aggregated_freelancers[job_title].extend([
-#                 scrape_freelancer_data(url) for url in urls
-#             ])
-#             current_page += 1
-# 
-# 
-#     print(f"Scraped {len(aggregated_freelancers[job_title]) * len(DATA_JOBS_TITLES)} freelancers.\n")
-# 
-#     with open("./data/guru_freelancers.csv", "w") as f:
-#         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
-#         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
-#         
-#         for searched_job_title, freelancers in aggregated_freelancers.items():
-#             for freelancer in freelancers:
-#                 writer.writerow({
-#                 "url": freelancer.url,
-#                 "name": freelancer.name,
-#                 "location": freelancer.location,
-#                 "earnings": freelancer.earnings,
-#                 "feedback_percent": freelancer.feedback_percent,
-#                 "skills": freelancer.skills,
-#                 "transactions_completed": freelancer.transactions_completed,
-#                 "employers_count": freelancer.employers_count,
-#                 "member_since": freelancer.member_since,
-#                 "description": freelancer.description,
-#                 "searched_job_title": searched_job_title,
-#                 })

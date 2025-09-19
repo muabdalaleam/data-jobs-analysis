@@ -30,7 +30,7 @@ CSV_FIELDNAMES   = [
     "searched_country",
     "searched_job_title",
 ]
-MAX_PAGES   = 10 # per job title and country each page containts 10 jobs
+MAX_PAGES   = 20 # per job title and country each page containts 10 jobs
 MAX_RETRIES = 6
 TIMEOUT     = 60
 COUNTRIES   = ['European Union', 'United States']
@@ -134,6 +134,7 @@ def scrape_job_data(id: JobId) -> Job:
 
     soup = BeautifulSoup(response.content, 'lxml')
 
+    # XXX: there's something wrong with the scraper
     def scrape_content(tag: str, class_attr: str, def_val=None, get_href=False):
         content = soup.find(tag, attrs={"class": class_attr})
 
@@ -206,7 +207,7 @@ def main():
 
             print(f"Scraped {len(aggregated_jobs[country][job_title])} jobs.\n")
 
-    with open("./data/linkedin_jobs.csv", "w") as f:
+    with open("../data/linkedin_jobs_new.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
 
