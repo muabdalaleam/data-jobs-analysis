@@ -1,12 +1,35 @@
-import pandas as pd
+import os
 import sqlite3
+import pandas as pd
+import glob
+from pathlib import Path
 
-con = sqlite3.connect("./data/raw_database.db")
+DATABASE_PATH = "../data/raw_database.db"
+FILES_PATTERN = "../data/[linkedin,upwork,guru]*.csv"
 
-linkedin_df = pd.read_csv("./data/linkedin_jobs.csv") 
-guru_df     = pd.read_csv("./data/guru_freelancers.csv") 
-upwork_df   = pd.read_csv("./data/upwork_freelancers.csv") 
+def get_table_name(csv_filename):
+    return f"{Path(csv_filename).stem}"
 
-linkedin_df.to_sql("linkedin", con, if_exists="fail", index=False)
-guru_df.to_sql("guru", con, if_exists="fail", index=False)
-upwork_df.to_sql("upwork", con, if_exists="fail", index=False)
+def main():
+    csv_files = glob.glob(FILES_PATTERN)
+    
+    if not csv_files:
+        return
+    
+    os.makedirs(os.path.dirname(DATABASE_PATH), exist_ok=True)
+    conn = sqlite3.connect(DATABASE_PATH)
+    
+    for csv_file in csv_files:
+        df = pd.read_csv(csv_file)
+        table_name = get_table_name(os.path.basename(csv_file))
+        try:
+            df.to_sql(table_name, conn, if_exists='fail', index=False)
+            print("Created a new table: ", csv_file)
+        except:
+            print(f"Failed creating the table: {table_name}")
+            continue
+    
+    conn.close()
+
+if __name__ == "__main__":
+    main()

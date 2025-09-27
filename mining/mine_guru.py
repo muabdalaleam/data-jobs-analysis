@@ -8,13 +8,13 @@ import undetected_chromedriver as uc
 
 from typing import NamedTuple, Dict, List
 from bs4 import BeautifulSoup
+from datetime import datetime
 import requests
 import time
 import csv
 import re
 
 DATA_JOBS_TITLES = [
-    "Data Entry",
     "Data Engineering",
     "Data Science",
     "Data Analysis",
@@ -33,7 +33,7 @@ CSV_FIELDNAMES = [
     "description",
     "searched_job_title"
 ]
-MAX_PAGES   = 10 # by default it's 20 freelancers per page so 10 is more than enough
+MAX_PAGES   = 12 # by default it's 20 freelancers per page so 12 is more than enough
 CHROMIUM_VERSION=141
 TIMEOUT     = 60
 GURU_TIMEOUT = 60 # seconds
@@ -152,7 +152,8 @@ def main():
  
         print(f"Scraped {len(aggregated_freelancers[job_title])} freelancers.\n")
 
-    with open("../data/guru_freelancers.csv", "w") as f:
+    date = datetime.today().strftime('%Y_%m_%d')
+    with open(f"../data/guru_freelancers_{date}.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
         

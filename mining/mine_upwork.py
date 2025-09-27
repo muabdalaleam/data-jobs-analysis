@@ -6,11 +6,11 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
 import undetected_chromedriver as uc
 from typing import List, NamedTuple, Dict
+from datetime import datetime
 import csv
 import re
 
 DATA_JOBS_TITLES = [
-    'Data entry',
     'Data engineer',
     'Data scientist',
     'Data analyst',
@@ -33,7 +33,7 @@ CSV_FIELDNAMES = [
 ]
 CHROMIUM_VERSION = 141  # Adjust as needed
 UPWORK_TIMEOUT = 90
-MAX_PAGES = 13
+MAX_PAGES = 16
 
 class Freelancer(NamedTuple):
     id: str
@@ -178,7 +178,8 @@ def main():
     driver.quit()
 
     # Saving the data
-    with open("../data/upwork_freelancers.csv", "w") as f:
+    date = datetime.today().strftime('%Y_%m_%d')
+    with open(f"../data/upwork_freelancers_{date}.csv", "w") as f:
         writer = csv.DictWriter(f, CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
 

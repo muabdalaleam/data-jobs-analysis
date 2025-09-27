@@ -2,12 +2,12 @@
 # stores the data in `./data/linkedin_jobs.csv`
 import requests
 import re
-from typing import NamedTuple, Dict
 import csv
+from datetime import datetime
+from typing import NamedTuple, Dict
 from bs4 import BeautifulSoup, PageElement
 
 DATA_JOBS_TITLES = [
-    "Data entry",
     "Data engineer",
     "Data scientist",
     "Data analyst",
@@ -30,8 +30,8 @@ CSV_FIELDNAMES   = [
     "searched_country",
     "searched_job_title",
 ]
-MAX_PAGES   = 20 # per job title and country each page containts 10 jobs
-MAX_RETRIES = 6
+MAX_PAGES   = 15 # per job title and country each page containts 10 jobs
+MAX_RETRIES = 7
 TIMEOUT     = 60
 COUNTRIES   = ['European Union', 'United States']
 HEADERS     = {
@@ -102,8 +102,9 @@ def search_jobs(country: str, job_title: str, page: int) -> list[JobId]:
     job_urls: list[str] = []
     for element in jobs_elements:
         if isinstance(element, PageElement):
-            job_urls.append(
-                element.find("a", attrs={"class": "base-card__full-link"})["href"])
+            link = element.find("a", attrs={"class": "base-card__full-link"})
+            if link:
+                job_urls.append(link["href"])
 
     job_ids: list[JobId] = []
     pattern = re.compile(r"-[0-9]*\?")
@@ -134,7 +135,6 @@ def scrape_job_data(id: JobId) -> Job:
 
     soup = BeautifulSoup(response.content, 'lxml')
 
-    # XXX: there's something wrong with the scraper
     def scrape_content(tag: str, class_attr: str, def_val=None, get_href=False):
         content = soup.find(tag, attrs={"class": class_attr})
 
@@ -154,6 +154,10 @@ def scrape_job_data(id: JobId) -> Job:
             return ""
 
         parent_item = job_criteria_subheader.parent
+
+        if not(parent_item):
+            return ""
+
         contents = parent_item.find("span").contents
 
         total_content = ""
@@ -172,7 +176,7 @@ def scrape_job_data(id: JobId) -> Job:
         description      = scrape_content("div", "show-more-less-html__markup"),
         job_url          = soup.find("a", attrs={"class": "topcard__link"})["href"],
         company_url      = soup.find("a", attrs={"class": "topcard__org-name-link"})["href"],
-        applicants       = scrape_content("figcaption", "num-applicants__caption"), # XXX:
+        applicants       = scrape_content("figcaption", "num-applicants__caption"),
 
         industries       = scrape_criteria_item("Industries"),
         employment_type  = scrape_criteria_item("Employment type"),
@@ -207,7 +211,9 @@ def main():
 
             print(f"Scraped {len(aggregated_jobs[country][job_title])} jobs.\n")
 
-    with open("../data/linkedin_jobs_new.csv", "w") as f:
+
+    date = datetime.today().strftime('%Y_%m_%d')
+    with open(f"../data/linkedin_jobs_{date}.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
 
