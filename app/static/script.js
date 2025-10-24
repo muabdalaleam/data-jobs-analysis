@@ -339,7 +339,6 @@ svg.append("g")
 
 // ==========================People earned more than 1,000 on Upwork Pictogram==========================
 async function plotPeopleWhoEaredMoneyPictogram() {
-
     chartLoading("people_who_earned_money")
 
     const response = await fetch("/data");
@@ -431,7 +430,6 @@ async function plotPeopleWhoEaredMoneyPictogram() {
 
 // =========================Total Jobs Per Industry Stacked single column chart=========================
 async function plotTotalJobsPerIndustry() {
-
     chartLoading("total_jobs_per_industry")
 
     // -----------------Preparing the chart data & main SVG-------------------

@@ -57,7 +57,6 @@ def dropdown_data():
 
 @app.route('/data', methods=['GET'])
 def main():
-
     country = session.get('country')
     job_title = session.get('job_title')
 
@@ -117,8 +116,6 @@ def main():
         ORDER BY total_jobs DESC
         LIMIT 6;'''
     # ------------------------------------------------------------------------------------
-
-
 
 
     # --------------------------------Executing the queries-------------------------------

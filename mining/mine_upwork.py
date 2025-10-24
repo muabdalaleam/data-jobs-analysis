@@ -34,6 +34,7 @@ CSV_FIELDNAMES = [
 CHROMIUM_VERSION = 141  # Adjust as needed
 UPWORK_TIMEOUT = 90
 MAX_PAGES = 16
+START_PAGE = 15
 
 class Freelancer(NamedTuple):
     id: str
@@ -163,7 +164,7 @@ def main():
         aggregated_freelancers[job_title] = []
 
         driver.get(
-            f"https://www.upwork.com/nx/search/talent/?page=1&q={job_title}"
+            f"https://www.upwork.com/nx/search/talent/?page={START_PAGE}&q={job_title}"
         )
 
         while current_page <= MAX_PAGES:

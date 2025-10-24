@@ -7,8 +7,8 @@ from selenium.common.exceptions import NoSuchElementException
 import undetected_chromedriver as uc
 
 from typing import NamedTuple, Dict, List
-from bs4 import BeautifulSoup
 from datetime import datetime
+from bs4 import BeautifulSoup
 import requests
 import time
 import csv
