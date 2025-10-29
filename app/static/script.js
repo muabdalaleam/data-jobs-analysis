@@ -172,7 +172,6 @@ async function plotSalaryPerJobTitle() {
 
 // ==========================&Top 10 Paid skills vs top 10 reqierd skills===========================
 async function plotTopPaidVsReqierdSkills() {
-
     chartLoading("paid_vs_required_skills")
 
     const response = await fetch("/data");
@@ -194,144 +193,144 @@ async function plotTopPaidVsReqierdSkills() {
         .range([minRadius, maxRadius]);
 
 
-// --------------------------X axis-----------------------
-const xScale = d3.scaleLinear()
-    .domain([0, 0])
-    .range([0, width]);
+	// --------------------------X axis-----------------------
+	const xScale = d3.scaleLinear()
+		.domain([0, 0])
+		.range([0, width]);
 
-svg.append("g")
-    .attr("class", "x-axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(xScale)
-        .ticks(7)
-        .tickFormat(d3.format(".2s")))
-    .attr("opacity", "0");
-// -------------------------------------------------------
+	svg.append("g")
+		.attr("class", "x-axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(d3.axisBottom(xScale)
+			.ticks(7)
+			.tickFormat(d3.format(".2s")))
+		.attr("opacity", "0");
+	// -------------------------------------------------------
 
-// -------------------------Y axis-------------------------
-const yScale = d3.scaleLinear()
-    .domain([0, d3.max(data.appending_count) * 1.5])
-    .range([height, 0]);
+	// -------------------------Y axis-------------------------
+	const yScale = d3.scaleLinear()
+		.domain([0, d3.max(data.appending_count) * 1.5])
+		.range([height, 0]);
 
-svg.append("g")
-    .attr("class", "y-axis")
-    .call(d3.axisLeft(yScale));
-// ---------------------------------------------------------
-
-
-
-    // --------------------Making the tooltip--------------------
-    const mouseover = function (event, d, i) {
-        tooltipText.style("opacity", 1);
-        tooltipRect.style("opacity", 1);
-    };
-    
-    const mousemove = function (event, d, i) {
-        const [mouseX, mouseY] = d3.pointer(event);
-    
-        const tooltipPadding = 5;
-    
-        tooltipText.text(capitalizeFirstLetter(d))
-            .attr("x", (mouseX - 10) + tooltipPadding)
-            .attr("y", mouseY - 15)
-            .attr("class", "plot-text");
-
-        tooltipRect
-            .attr("x", (mouseX - 10))
-            .attr("y", mouseY - 30)
-            .attr("width", tooltipText.node().getComputedTextLength() + 2 * tooltipPadding)
-            .attr("height", 20)
-    };
-    
-    const mouseleave = function (event, d, i) {
-        tooltipText.style("opacity", 0);
-        tooltipRect.style("opacity", 0);
-    };
-    
-    var tooltipRect = svg.append("rect")
-        .attr("class", "tooltip")
-        .style("opacity", 0)
-        .style("fill", "black")
-        .style("stroke", "black")
-        .attr("rx", 3)
-        .style("stroke-width", "1px");
-
-    var tooltipText = svg.append("text")
-        .attr("class", "tooltip")
-        .style("opacity", 0)
-        .style("font-size", "12px");
-    // --------------------------------------------------------
-
-    // ----------------Creating the scatter plot---------------
-    svg.selectAll(".dot")
-        .data(data.skill)
-        .enter().append("circle")
-        .attr("class", "dot")
-        .attr("cx", (d, i) => xScale(data.avg_salary[i]))
-        .attr("cy", (d, i) => yScale(data.appending_count[i]) + calculateQuantile(data.appending_count, .6))
-        .attr("r", (d, i) => radiusScale(data.avg_salary[i]))
-        .style("fill", (d, i) => data.avg_salary[i] > calculateQuantile(data.avg_salary, .75) ? main_color : "gray")
-        .attr('class', (d, i) => data.avg_salary[i] > calculateQuantile(data.avg_salary, .75) ? "svg-shadow" : "gray")
-        .on("mouseover", mouseover)
-        .on("mousemove", mousemove)
-        .on("mouseleave", mouseleave)
-        .attr("opacity", "0");
-    // --------------------------------------------------------
+	svg.append("g")
+		.attr("class", "y-axis")
+		.call(d3.axisLeft(yScale));
+	// ---------------------------------------------------------
 
 
-    // ----------------------Plot title-------------------------
-    const titleText = "Skills Pay Vs Appending Count"; // Change this to your desired title
-    const titleFontSize = 18;
 
-    svg.append("text")
-        .attr("class", "plot-title")
-        .attr("x", (svgWidth / 2) - TitleShiftConst)
-        .attr("y", -margin.top / 2)
-        .attr("text-anchor", "middle")
-        .text(titleText);
-    // ---------------------------------------------------------
+		// --------------------Making the tooltip--------------------
+		const mouseover = function (event, d, i) {
+			tooltipText.style("opacity", 1);
+			tooltipRect.style("opacity", 1);
+		};
+		
+		const mousemove = function (event, d, i) {
+			const [mouseX, mouseY] = d3.pointer(event);
+		
+			const tooltipPadding = 5;
+		
+			tooltipText.text(capitalizeFirstLetter(d))
+				.attr("x", (mouseX - 10) + tooltipPadding)
+				.attr("y", mouseY - 15)
+				.attr("class", "plot-text");
+
+			tooltipRect
+				.attr("x", (mouseX - 10))
+				.attr("y", mouseY - 30)
+				.attr("width", tooltipText.node().getComputedTextLength() + 2 * tooltipPadding)
+				.attr("height", 20)
+		};
+		
+		const mouseleave = function (event, d, i) {
+			tooltipText.style("opacity", 0);
+			tooltipRect.style("opacity", 0);
+		};
+		
+		var tooltipRect = svg.append("rect")
+			.attr("class", "tooltip")
+			.style("opacity", 0)
+			.style("fill", "black")
+			.style("stroke", "black")
+			.attr("rx", 3)
+			.style("stroke-width", "1px");
+
+		var tooltipText = svg.append("text")
+			.attr("class", "tooltip")
+			.style("opacity", 0)
+			.style("font-size", "12px");
+		// --------------------------------------------------------
+
+		// ----------------Creating the scatter plot---------------
+		svg.selectAll(".dot")
+			.data(data.skill)
+			.enter().append("circle")
+			.attr("class", "dot")
+			.attr("cx", (d, i) => xScale(data.avg_salary[i]))
+			.attr("cy", (d, i) => yScale(data.appending_count[i]) + calculateQuantile(data.appending_count, .6))
+			.attr("r", (d, i) => radiusScale(data.avg_salary[i]))
+			.style("fill", (d, i) => data.avg_salary[i] > calculateQuantile(data.avg_salary, .75) ? main_color : "gray")
+			.attr('class', (d, i) => data.avg_salary[i] > calculateQuantile(data.avg_salary, .75) ? "svg-shadow" : "gray")
+			.on("mouseover", mouseover)
+			.on("mousemove", mousemove)
+			.on("mouseleave", mouseleave)
+			.attr("opacity", "0");
+		// --------------------------------------------------------
 
 
-    // ----------------Adding the X axis animation---------------
-    xScale.domain([d3.min(data.avg_salary) / 1.2, d3.max(data.avg_salary) * 1.1]);
+		// ----------------------Plot title-------------------------
+		const titleText = "Skills Pay Vs Appending Count"; // Change this to your desired title
+		const titleFontSize = 18;
 
-    svg.select(".x-axis")
-        .transition()
-        .duration(2000)
-        .attr("opacity", "1")
-        .call(d3.axisBottom(xScale)
-                .tickFormat(d3.format(".2s"))
-                .ticks(7));
-    
-    svg.selectAll("circle")
-        .attr("cx", 20)
-        .transition()
-        .delay(function(d, i) { return (i * 3); })
-        .duration(3000)
-        .attr("cx", (d, i) => xScale(data.avg_salary[i]))
-        .attr("cy", (d, i) => yScale(data.appending_count[i] + calculateQuantile(data.appending_count, .6)))
-        .attr("opacity", "1");
-
-    svg.selectAll("circle")
-        .transition()
-        .delay(3000)
-        .duration(3000)
-        .attr("cx", (d, i) => xScale(data.avg_salary[i]))
-        .attr("cy", (d, i) => yScale(data.appending_count[i] + calculateQuantile(data.appending_count, .6)))
-        .attr("opacity", "1")
-    // ------------------------------------------------------------
+		svg.append("text")
+			.attr("class", "plot-title")
+			.attr("x", (svgWidth / 2) - TitleShiftConst)
+			.attr("y", -margin.top / 2)
+			.attr("text-anchor", "middle")
+			.text(titleText);
+		// ---------------------------------------------------------
 
 
-    // ----------------------Add x-axis label----------------------
-    svg.append("text")
-        .attr("class", "x-label")
-        .attr("x", (svgWidth / 2) - TitleShiftConst)
-        .attr("y", height + margin.bottom - 4)
-        .style("text-anchor", "middle")
-        .text("Average Pay")
-        .attr("class", "plot-text")
-        .attr("font-size", "10");
-    // ------------------------------------------------------------
+		// ----------------Adding the X axis animation---------------
+		xScale.domain([d3.min(data.avg_salary) / 1.2, d3.max(data.avg_salary) * 1.1]);
+
+		svg.select(".x-axis")
+			.transition()
+			.duration(2000)
+			.attr("opacity", "1")
+			.call(d3.axisBottom(xScale)
+					.tickFormat(d3.format(".2s"))
+					.ticks(7));
+		
+		svg.selectAll("circle")
+			.attr("cx", 20)
+			.transition()
+			.delay(function(d, i) { return (i * 3); })
+			.duration(3000)
+			.attr("cx", (d, i) => xScale(data.avg_salary[i]))
+			.attr("cy", (d, i) => yScale(data.appending_count[i] + calculateQuantile(data.appending_count, .6)))
+			.attr("opacity", "1");
+
+		svg.selectAll("circle")
+			.transition()
+			.delay(3000)
+			.duration(3000)
+			.attr("cx", (d, i) => xScale(data.avg_salary[i]))
+			.attr("cy", (d, i) => yScale(data.appending_count[i] + calculateQuantile(data.appending_count, .6)))
+			.attr("opacity", "1")
+		// ------------------------------------------------------------
+
+
+		// ----------------------Add x-axis label----------------------
+		svg.append("text")
+			.attr("class", "x-label")
+			.attr("x", (svgWidth / 2) - TitleShiftConst)
+			.attr("y", height + margin.bottom - 4)
+			.style("text-anchor", "middle")
+			.text("Average Pay")
+			.attr("class", "plot-text")
+			.attr("font-size", "10");
+		// ------------------------------------------------------------
 }
 // ====================================================================================================&
 
