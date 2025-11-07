@@ -1,9 +1,7 @@
 import sqlite3
 import pandas as pd
-import duckdb
 
 DB_URI           = "file:./data/clean_database.db?mode=ro"
-DASHBOARD_DB_URI = "file:./dashboard/data.sqlite"
 
 with sqlite3.connect(DB_URI, uri=True) as con:
     linkedin_df = pd.read_sql_query("""
@@ -13,6 +11,7 @@ with sqlite3.connect(DB_URI, uri=True) as con:
             searched_country AS country,
             skills
         FROM linkedin
+        WHERE pay_type = 'Annually'
         """, con)
     
     upwork_df = pd.read_sql_query("""
@@ -20,6 +19,5 @@ with sqlite3.connect(DB_URI, uri=True) as con:
         FROM upwork
         """, con)
 
-with sqlite3.connect(DASHBOARD_DB_URI, uri=True) as con:
-    linkedin_df.to_sql("linkedin", con, if_exists="replace", index=False)
-    upwork_df.to_sql("upwork", con, if_exists="replace", index=False)
+linkedin_df.to_json("./dashboard/data/linkedin.json", orient="columns", double_precision=2)
+upwork_df.to_json("./dashboard/data/upwork.json", orient="columns", double_precision=2)

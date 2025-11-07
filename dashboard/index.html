@@ -7,16 +7,38 @@
 	<meta name="description" content="" />
 	<link rel="stylesheet" type="text/css" href="style.css" />
 	<link rel="icon" href="favicon.png">
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="script.js"></script>
 </head>
 <body>
 		<h1 id="title">Data-field jobs & freelancing interactive report</h1>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-		<div></div>
-	<script src="script.js"></script>
+		<div class="chart" id="chart1"><canvas></canvas></div>
+		<div class="chart" id="chart2"></div>
+		<div class="chart" id="chart3"></div>
+		<div class="chart" id="chart4"><canvas></canvas></div>
+		<form>
+			<div>
+				<label for="countries">Region</label>
+				<select name="countries" id="countries">
+					<option value="all">All</option>
+					<option value="united-states">United states</option>
+					<option value="european-union">European union</option>
+				</select>
+			</div>
+			<div>
+				<label for="job-field">Job field</label>
+				<select name="job-field" id="job-field">
+					<option value="all">All</option>
+					<option value="data-science">Data science</option>
+					<option value="data-analysis">Data analysis</option>
+					<option value="machine-learning">Machine learning</option>
+					<option value="data-enginerring">Data enginerring</option>
+				</select>
+			</div>
+		</form>
+		<div class="chart"><p>
+			Hello, World welocme and goodbye
+		</p></div>
 </body>
 </html>
