@@ -1,9 +1,12 @@
-# Data Jobs Analysis
-Welcome 👋🏻, Data nerds in my humble try to analyze Data jobs & Freelance Market with my own unique data so I can:
+# Data-field jobs and freelancing analysis
 
-- Make you know about each major statistics 📈
-- Help you know what skills are the most required & paid 🤑
-- Show you how to success as a Data nerd on freelancing platforms 🤓
+![Static Badge](https://img.shields.io/badge/freelancing_analysis-nbviewer-orange?link=https%3A%2F%2Fnbviewer.org%2Fgithub%2Fmuabdalaleam%2Fdata-jobs-analysis%2Fblob%2Fmain%2Fnotebooks%2Ffreelancers_analysis.ipynb) ![Static Badge](https://img.shields.io/badge/jobs_analysis-nbviewer-orange?link=https%3A%2F%2Fnbviewer.org%2Fgithub%2Fmuabdalaleam%2Fdata-jobs-analysis%2Fblob%2Fmain%2Fnotebooks%2Fjobs_analysis.ipynb) ![Static Badge](https://img.shields.io/badge/cleaning_notebook-nbviewer-orange?link=https%3A%2F%2Fnbviewer.org%2Fgithub%2Fmuabdalaleam%2Fdata-jobs-analysis%2Fblob%2Fmain%2Fnotebooks%2Fcleaning.ipynb)
+
+
+
+An inspection into the current market of data-field jobs by looking into LinkedIn job postings & aka (data analysis, data science, ML development & data engineering) by
+looking into jobs postings in LinkedIn, and freelancers accounts on UpWork & Guru.
+
 
 ## To see Anything in this project please refer to the links table below:
 | Project corner | Link |
