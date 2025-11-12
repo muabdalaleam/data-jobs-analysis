@@ -1,5 +1,6 @@
-**/.env
-**/venv/
 **/.ipynb_checkpoints/
-**/models/
-**/fonts/
+/data/
+/fonts/
+/venv/
+/models/
+
