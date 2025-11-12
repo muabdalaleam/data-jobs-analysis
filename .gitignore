@@ -1,6 +1,5 @@
 **/.env
 **/venv/
-**/driver/
 **/.ipynb_checkpoints/
 **/models/
 **/fonts/

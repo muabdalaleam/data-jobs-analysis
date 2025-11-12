@@ -11,11 +11,13 @@ with sqlite3.connect(DB_URI, uri=True) as con:
             searched_country AS country,
             skills
         FROM linkedin
-        WHERE pay_type = 'Annually'
+        WHERE pay_type = 'Annually' AND
+            salary_min IS NOT NULL
         """, con)
     
     upwork_df = pd.read_sql_query("""
-        SELECT hour_rate, skills, earnings
+        SELECT hour_rate, skills, earnings, 
+            searched_job_title AS job_title
         FROM upwork
         """, con)
 

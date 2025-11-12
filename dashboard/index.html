@@ -13,32 +13,43 @@
 </head>
 <body>
 		<h1 id="title">Data-field jobs & freelancing interactive report</h1>
-		<div class="chart" id="chart1"><canvas></canvas></div>
-		<div class="chart" id="chart2"></div>
-		<div class="chart" id="chart3"></div>
-		<div class="chart" id="chart4"><canvas></canvas></div>
+
+		<!-- TODO: use your actual sites -->
+		<div id="contacts">
+			<a href="https://example.com" target="_blank"><img src ="./assets/github-142-svgrepo-com.svg" alt="Github logo"/></a>
+			<a href="https://example.com" target="_blank"><img src ="./assets/globe-svgrepo-com.svg"      alt="Globe logo"/></a>
+			<a href="https://example.com" target="_blank"><img src ="./assets/x-logo/logo.svg"            alt="X (Twitter) logo"/></a>
+		</div>
+
+		<div class="chart" id="chart1"></div>
+		<div class="chart" id="chart2" alt="Median skill salary vs skill frequency"><canvas></canvas></div>
+		<div class="chart" id="chart3" alt="Freelancers earning distribution"><canvas></canvas></div>
+		<div class="chart" id="chart4"></div>
 		<form>
-			<div>
-				<label for="countries">Region</label>
-				<select name="countries" id="countries">
-					<option value="all">All</option>
-					<option value="united-states">United states</option>
-					<option value="european-union">European union</option>
-				</select>
-			</div>
 			<div>
 				<label for="job-field">Job field</label>
 				<select name="job-field" id="job-field">
 					<option value="all">All</option>
-					<option value="data-science">Data science</option>
-					<option value="data-analysis">Data analysis</option>
-					<option value="machine-learning">Machine learning</option>
-					<option value="data-enginerring">Data enginerring</option>
+					<option value="Data scientist">Data science</option>
+					<option value="Data analyst">Data analysis</option>
+					<option value="Machine learning">Machine learning</option>
+					<option value="Data engineer">Data enginerring</option>
 				</select>
 			</div>
 		</form>
-		<div class="chart"><p>
-			Hello, World welocme and goodbye
-		</p></div>
+		<div id="tail">
+			<h2>Notes</h2>
+			<br>
+			<ul>
+				<li>The jobs data used in this report is USA only because the EU jobs didn't provide
+				salary in thier descriptions.</li>
+				<li>Salaries are extracted from job descriptions and not every job description mentions
+				the salary so companies with high salaries are more likely to mention a salary creating
+				a bias toward high salaries</li>
+				<li>You can go see the full repository behind this report with more cool stuff 
+					<a href="https://example.com" target="_blank">Here</a>.
+				</li>
+			</ul>
+		</div>
 </body>
 </html>

@@ -1,13 +1,11 @@
 `use strict`
 
-//  This script should be:
-// - Effecient
-// - Modefieable
-// - Easy to read
-// - Consice functions
-
 let linkedinJSON
 let upworkJSON
+
+var skillsScatter
+var earningsHistogram
+
 const defaultOptions = {
 	scales: { y: { beginAtZero: true } },
 	responsive: true,
@@ -18,22 +16,34 @@ const defaultOptions = {
 			display: true,
 			font: {"size": 25, "weight": "normal"},
 			color: "white",
-			text: 'Chart Title',
 			padding: { top: 0, bottom: 10 }
+		},
+		tooltip: {
+			titleFont: {"size": 20, "weight": "bold"},
+			bodyFont: {"size": 13, "weight": "normal"},
+			displayColors: false,
+			intersect: true
 		}
+	},
+	scales: {
+		x: {
+			ticks: { color: "#CCCCCC"},
+			grid: {display: false},
+			title: {display: true, color: "#CCCCCC", font: {"size": 13, "weight": "normal"}} 
+		},
+		y: {
+			ticks: { color: "#666666"},
+			grid: {color: "#666666"} 
+		}
+	},
+	animation: {
+		duration: 1000, // Animation duration in milliseconds
+		easing: 'easeInOutQuart' // Ease in-out animation
 	}
 }
 
-function deepFreeze(obj) {
-	// https://codesynopsis.com/posts/how-to-prevent-mutating-an-object-in-javascript
-	if (obj === null || typeof obj !== 'object') return obj
-	
-	Object.keys(obj).forEach((key) => {
-		deepFreeze(obj[key])
-	})
-	
-	return Object.freeze(obj)
-}
+// XXX: animations not working
+Chart.defaults.animation = true;
 
 async function loadRawJSON() {
 	// if this function was called before don't execute it
@@ -68,158 +78,191 @@ async function loadRawJSON() {
 	})
 }
 
-function drawSkillsScatter(jobsData);
 
-function drawMedianSalary(jobsData);
+function drawMedianSalary(jobsData) {
+	let salaries = jobsData["salary"].sort((a, b) => { return a - b})
+	let median = (
+		salaries[Math.floor((salaries.length+1)/2)-1] + 
+		salaries[Math.ceil( (salaries.length+1)/2)-1]
+	) / 2
 
-function drawAvgHourRate(freelancersData);
+	let titleElm = document.createElement("h2")
+	let valueElm = document.createElement("h1")
 
-function drawEarningsHistogram(freelancersData);
+	let medianSalaryDiv = document.getElementById('chart1')
+	medianSalaryDiv.textContent = '';
 
-async function main() {
-	await loadRawJSON()
+	titleElm.textContent += "Median salary from job postings"
+	valueElm.textContent += `${(median / 1000).toFixed(0)}K`
 
-	// deepFreeze(defaultOptions)
-	// deepFreeze(linkedinJSON)
-	// deepFreeze(upworkJSON)
-	
-	let jobsData        = linkedinJSON;
-	let freelancersData = upworkJSON;
+	medianSalaryDiv.append(titleElm)
+	medianSalaryDiv.append(valueElm)
+}
 
-	// ==================== Chart 1 ====================
-	{
-		let skillsScatterCtx = document.getElementById('chart1').children[0].getContext("2d")
+function drawSkillsScatter(jobsData) {
+	if (skillsScatter !== undefined) skillsScatter.destroy()
 
-		let options = JSON.parse(JSON.stringify(defaultOptions))
-		let data = {} // keys: skill name, values: object holding occurances as x & earnings as y 
+	let options = JSON.parse(JSON.stringify(defaultOptions))
+	let data = {} // keys: skill name, values: object holding occurances as x & earnings as y 
 
-		Object.values(jobsData["skills"]).forEach((skills_str, i) => {
-			if (jobsData["salary"][i] <= 5000) return
+	let skillsScatterCtx = document.getElementById('chart2').children[0].getContext("2d")
 
-			let skills = skills_str.split(",")
+	Object.values(jobsData["skills"]).forEach((skills_str, i) => {
+		let skills = skills_str.split(",")
 
-			skills.forEach((skill) => {
-				if (!(skill in data)) data[skill] = {"x": 0, "y": []} // the y array should be converted into a number
-				data[skill]["x"] += 1
-				data[skill]["y"].push(jobsData["salary"][i]) // this must be devided later to get the mean
-			})
+		skills.forEach((skill) => {
+			if (!(skill in data)) data[skill] = {"x": 0, "y": []} // the y array should be converted into a number
+			data[skill]["x"] += 1
+			data[skill]["y"].push(jobsData["salary"][i]) // this must be devided later to get the mean
 		})
+	})
 
-		Object.keys(data).forEach((skill) => {
-			// calculating the salary median
-			let salaries = data[skill]["y"].sort()
-			data[skill]["y"] = (
-				salaries[Math.floor((salaries.length+1)/2)-1] + 
-				salaries[Math.ceil((salaries.length+1)/2)-1]
-			) / 2
+	Object.keys(data).forEach((skill) => {
+		// calculating the salary median
+		let salaries = data[skill]["y"].sort((a, b) => { return a - b })
 
-			if (data[skill]["x"] < 10) delete data[skill]
-		})
-
-		options["radius"] = 5
-		options["plugins"]["title"]["text"] = "Median skill salary vs. skill frequency"
-
-		new Chart(skillsScatterCtx, {
-			type: 'scatter',
-			data: {
-				labels: Object.keys(data),
-				datasets: [{
-					data: Object.values(data),
-					backgroundColor: '#1DCD9F'
-				}]
-			},
-			options: options
-		})
-	}
-	// =================================================
-	
-
-	// ==================== Chart 2 ====================
-	{
-		let medianSalaryDiv = document.getElementById('chart2')
-		let median = (
-			jobsData["salary"][Math.floor((jobsData["salary"].length+1)/2)-1] + 
-			jobsData["salary"][Math.ceil((jobsData["salary"].length+1)/2)-1]
+		data[skill]["y"] = (
+			salaries[Math.floor((salaries.length+1)/2)-1] + 
+			salaries[Math.ceil((salaries.length+1)/2)-1]
 		) / 2
 
-		let titleElm = document.createElement("h2")
-		let valueElm = document.createElement("h1")
+		if (data[skill]["x"] < 10) delete data[skill]
+	})
 
-		titleElm.textContent += "Median salary from job postings"
-		valueElm.textContent += `${(median / 1000).toFixed(0)}K`
+	options["radius"] = 9
+	options["hoverRadius"] = 12
+	options["borderColor"] = "#111111" 
+	options["borderWidth"] = 4
 
-		medianSalaryDiv.append(titleElm)
-		medianSalaryDiv.append(valueElm)
+	options["plugins"]["title"]["text"] = "Median skill salary vs. skill frequency"
+	options["scales"]["x"]["title"]["text"] = "Frequency"
+	options["scales"]["y"]["ticks"]["callback"] = (val, _, __) => { return (val / 1000) + "K" }
+
+	options["plugins"]["tooltip"]["callbacks"] = {}
+	options["plugins"]["tooltip"]["callbacks"]["label"] = (ctx) => {
+		return `Avg skill salary: ${(ctx.parsed.y/1000).toFixed(0)}K`
 	}
-	// =================================================
 
+	skillsScatter = new Chart(skillsScatterCtx, {
+		type: 'scatter',
+		data: {
+			labels: Object.keys(data),
+			datasets: [{
+				data: Object.values(data),
+				backgroundColor: '#1DCD9F'
+			}]
+		},
+		options: options
+	})
+}
 
-	// ==================== Chart 3 ====================
-	{
-		let avgHourRateDiv = document.getElementById('chart3')
-		let sum = freelancersData["hour_rate"].reduce((acc, curr) => { return acc + curr }, 0)
-		let n = freelancersData["hour_rate"].filter(Number.isFinite).length
-		
-		let titleElm = document.createElement("h2")
-		let valueElm = document.createElement("h1")
+function drawEarningsHistogram(freelancersData) {
+	let earningsHistogramCtx = document.getElementById('chart3').children[0].getContext("2d")
+	if (earningsHistogram !== undefined) earningsHistogram.destroy()
 
-		titleElm.textContent += "Avg. freelancer hour rate"
-		valueElm.textContent += `${(sum / n).toFixed(1)}$`
+	let data = new Map() // keys: earning range, values: frequency
+	let options = JSON.parse(JSON.stringify(defaultOptions))
 
-		avgHourRateDiv.append(titleElm)
-		avgHourRateDiv.append(valueElm)
-	}
-	// =================================================
+	Object.values(freelancersData["earnings"]).forEach((earning) => {
+		let roundedEarning
+		roundedEarning = (() => {
+			if      (earning == null)                                               return NaN
+			else if (earning / Math.pow(10, Math.floor(Math.log10(earning+1))) < 4) return 1
+			else if (earning / Math.pow(10, Math.floor(Math.log10(earning+1))) < 7) return 5
+			else    return 10
+		})() * Math.pow(10, Math.floor(Math.log10(earning+1)))
 
+		if (!(data.has(roundedEarning))) data.set(roundedEarning, 1)
+		data.set(roundedEarning, data.get(roundedEarning) + 1) 
+	})
 
-	// ==================== Chart 4 ====================
-	{
-		let earningsHistogramCtx = document.getElementById('chart4').children[0].getContext("2d")
+	data = new Map([...data.entries()].sort((a, b) => {
+		return isNaN(a[0]) ? -1 : isNaN(b[0]) ? 1 : a[0] - b[0]
+	}))
 
-		let data = new Map() // keys: earning range, values: frequency
-		let options = JSON.parse(JSON.stringify(defaultOptions))
+	let labels = Array.from(data.keys()).map((n) => {
+		return isNaN(n) ? "NaN" : `~${n >= 1e6 ? n/1e6 + "M" : n >= 1e3 ? n/1e3 + "K" : n}`
+	})
 
-		Object.values(freelancersData["earnings"]).forEach((earning) => {
-			let roundedEarning
-			roundedEarning = (() => {
-				if      (earning == null)                                               return NaN
-				else if (earning / Math.pow(10, Math.floor(Math.log10(earning+1))) < 4) return 1
-				else if (earning / Math.pow(10, Math.floor(Math.log10(earning+1))) < 7) return 5
-				else    return 10
-			})() * Math.pow(10, Math.floor(Math.log10(earning+1)))
+	options["borderColor"] = "#1DCD9F"
+	options["borderWidth"] = 4
+	options["plugins"]["title"]["text"] = "Freelancers earnings distribution"	
+	options["scales"]["x"]["title"]["text"] = "Earnings"
 
-			if (!(data.has(roundedEarning))) data.set(roundedEarning, 1)
-			data.set(roundedEarning, data.get(roundedEarning) + 1) 
+	earningsHistogram = new Chart(earningsHistogramCtx, {
+		type: 'bar',
+		data: {
+			labels: labels,
+			datasets: [{
+				label: 'Frequency',
+				data: Array.from(data.values()),
+				backgroundColor: "#111111"
+			}]
+		},
+		options: options,
+	})
+}
+
+function drawAvgHourRate(freelancersData) {
+	let sum = freelancersData["hour_rate"].reduce((acc, curr) => { return acc + curr }, 0)
+	let n = freelancersData["hour_rate"].filter(Number.isFinite).length
+
+	let avgHourRateDiv = document.getElementById("chart4")
+	avgHourRateDiv.textContent = "";
+	
+	let titleElm = document.createElement("h2")
+	let valueElm = document.createElement("h1")
+
+	titleElm.textContent += "Avg. freelancer hour rate"
+	valueElm.textContent += `${(sum / n).toFixed(1)}$`
+
+	avgHourRateDiv.append(titleElm)
+	avgHourRateDiv.append(valueElm)
+}
+
+let render = () => {
+	// let country  = document.getElementById("countries").value
+	let jobField = document.getElementById("job-field").value
+
+	let jobsData = {}
+	let freelancersData = {}
+
+	let jobsIndecies = linkedinJSON["job_title"]
+		.map((jt, i) => { return (jt === jobField || jobField === "all" ? i : NaN) })
+		.filter((idx) => { return (!isNaN(idx)) })
+
+	let freelancersIndecies = upworkJSON["job_title"]
+		.map((jt, i) => { return (jt === jobField || jobField === "all" ? i : NaN) })
+		.filter((idx) => { return (!isNaN(idx)) })
+
+	Object.keys(linkedinJSON).forEach((key) => {
+		jobsData[key] = []
+		jobsIndecies.forEach((idx) => {
+			jobsData[key].push(linkedinJSON[key][idx])
 		})
+	})
 
-		data = new Map([...data.entries()].sort((a, b) => {
-			return isNaN(a[0]) ? -1 : isNaN(b[0]) ? 1 : a[0] - b[0]
-		}))
-
-		let labels = Array.from(data.keys()).map((n) => {
-			return isNaN(n) ? "NaN" : `~${n >= 1e6 ? n/1e6 + "M" : n >= 1e3 ? n/1e3 + "K" : n}`
+	Object.keys(upworkJSON).forEach((key) => {
+		freelancersData[key] = []
+		freelancersIndecies.forEach((idx) => {
+			freelancersData[key].push(upworkJSON[key][idx])
 		})
+	})
 
-		options["plugins"]["title"]["text"] = "Freelancers earnings distribution"	
+	console.log(jobsData)
+	
+	drawSkillsScatter(jobsData)
+	drawMedianSalary(jobsData)
 
-		new Chart(earningsHistogramCtx, {
-			type: 'bar',
-			data: {
-				labels: labels,
-				datasets: [{
-					label: 'Frequency',
-					data: Array.from(data.values()),
-					backgroundColor: '#1DCD9F'
-				}]
-			},
-			options: options,
-		})
-	}
-	// =================================================
+	drawAvgHourRate(freelancersData)
+	drawEarningsHistogram(freelancersData)
 }
 
 // Should work when: DOM loaded, Refreshed, Color theme changed,
-document.addEventListener("DOMContentLoaded", () => {
-	document.getElementById("countries").addEventListener("change", main)
-	main()
+document.addEventListener("DOMContentLoaded", async () => {
+	await loadRawJSON();
+
+	document.getElementById("job-field").addEventListener("change", render)
+
+	render()
 })

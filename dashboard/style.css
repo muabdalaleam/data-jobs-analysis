@@ -1,21 +1,11 @@
 :root {
-	@media (prefers-color-scheme: dark) {
-		--bg:           black;
-		--bg-light:     #111111;
-		--text:         white;
-		--primary:      #1DCD9F;
-		--secondary:    #169976;
-		--border-width: 0.1rem;
-	}
-
-	@media (prefers-color-scheme: light) {
-		--bg: white;
-		--bg-light: #E5E5E5;
-		--text: black;
-		--primary: #4D96FF; /* TODO: handle light colors better */
-		--secondary: #003580;
-		--border-width: 0.12rem;
-	}
+	/* I DON'T GIVE A SHIT ABOUT LIGHT MODE  */
+	--bg:           black;
+	--bg-light:     #111111;
+	--text:         white;
+	--primary:      #1DCD9F;
+	--secondary:    #169976;
+	--border-width: 0.1rem;
 }
 
 * {
@@ -52,6 +42,10 @@ h1, h2, h3, h4, h5, p, li {
     text-decoration: none;
 }
 
+a {
+	color: var(--primary);
+}
+
 h1#title {
 	grid-row: 1;
 	grid-column: 1/3;
@@ -60,10 +54,11 @@ h1#title {
 
 body div {
 	background-color: var(--bg-light);
-	padding: 20px 10px 10px 10px;
+	padding: 10px 10px 10px 10px;
 }
 
-div.chart canvas {
+div.chart {
+	padding: 20px 10px 10px 10px;
 }
 
 div.chart h1 {
@@ -82,29 +77,29 @@ div.chart h2 {
 }
 
 div#chart1 {
-	grid-row: 2/4;
+	grid-row: 2;
 	grid-column: 1;
 }
 
 div#chart2 {
-	grid-row: 2;
+	grid-row: 2/4;
 	grid-column: 2;
 }
 
 div#chart3 {
-	grid-row: 4;
+	grid-row: 3/5;
 	grid-column: 1;
 }
 
 div#chart4 {
-	grid-row: 3/5;
+	grid-row: 4;
 	grid-column: 2;
 }
 
 form {
 	background-color: var(--bg-light);
 
-	grid-row: 2 / 4;
+	grid-row: 2;
 	grid-column: 3;
 
 	display: flex;
@@ -121,6 +116,7 @@ form div {
 	row-gap: 1rem;
 
 	width: 60%;
+	overflow: scroll;
 }
 
 form div label {
@@ -138,4 +134,43 @@ form div select {
 	font-size:   1rem;
 	padding: 10px;
 	transition: 0.4s;
+}
+
+
+div#contacts {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+div#contacts a {
+	height: 80%;
+	cursor: pointer;
+}
+
+div#contacts a img {
+	height: 100%;
+}
+
+div#contacts a img:hover {
+	/* claude is a chad */
+	filter: invert(0.46) sepia(1) saturate(3.5) hue-rotate(118deg);
+}
+
+div#tail {
+	grid-row: 3/5;
+	grid-column: 3;
+	overflow: scroll;
+}
+
+div#tail h2 {
+	width: 100%;
+	text-align: center;
+	padding-top: 10px;
+}
+
+div#tail ul li {
+	list-style-position: inside;
+	margin-bottom: 1rem;
 }
