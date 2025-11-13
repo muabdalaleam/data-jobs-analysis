@@ -30,15 +30,17 @@ CSV_FIELDNAMES   = [
     "searched_country",
     "searched_job_title",
 ]
-MAX_PAGES   = 15 # per job title and country each page containts 10 jobs
-MAX_RETRIES = 7
-TIMEOUT     = 60
-COUNTRIES   = ['European Union', 'United States']
 HEADERS     = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
     'Accept-Encoding': '*',
     'Connection': 'keep-alive',
 }
+
+DATA_DIRECTORY = "./data"
+MAX_PAGES   = 2 # per job title and country each page containts 10 jobs
+MAX_RETRIES = 6
+TIMEOUT     = 60
+COUNTRIES   = ['European Union', 'United States']
 
 type JobId = str
 
@@ -82,21 +84,23 @@ def search_jobs(country: str, job_title: str, page: int) -> list[JobId]:
          f"?keywords={job_title}&location={country}&position=1&page" + \
          f"Num=0&start={(page - 1) * 10}"
 
-    failed_tries = 0
-    try:
-        response = requests.get(url=url, params=HEADERS, timeout=TIMEOUT)
-    except requests.exceptions.ConnectionError as err:
-        print("Retrining searching for jobs.")
-        response = requests.get(url, params=HEADERS, timeout=TIMEOUT)
-        failed_tries += 1
-        if failed_tries > MAX_RETRIES:
-            raise err
+    for i in range(MAX_RETRIES):
+        try:
+            response = requests.get(url, params=HEADERS, timeout=TIMEOUT)
+        except requests.exceptions.ConnectionError as err:
+            if i >= MAX_RETRIES - 1:
+                raise err
+            continue
 
-    if response.status_code != 200:
-        return []
-        # raise requests.exceptions.HTTPError("Recieved invalid response while searching for jobs.")
+        soup = BeautifulSoup(response.content, 'lxml')
+        if soup.find("li"):
+            break
 
-    soup = BeautifulSoup(response.content, 'html.parser')
+        if i >= MAX_RETRIES - 1:
+            print(f"Exceeded max retries for \"{job_title}\" within \"{country}\" job data.")
+            return [] # don't ask why
+
+        print(f"Retrying scraping \"{job_title}\" within \"{country}\" job data.")
 
     jobs_elements = soup.find_all("li")
     job_urls: list[str] = []
@@ -119,29 +123,27 @@ def search_jobs(country: str, job_title: str, page: int) -> list[JobId]:
 def scrape_job_data(id: JobId) -> Job:
     url=f"https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/{id}"
 
-    failed_tries = 0
-    try:
-        response = requests.get(url=url, params=HEADERS, timeout=TIMEOUT)
-    except requests.exceptions.ConnectionError as err:
-        print(f"Retrining scraping \"{id}\" job data.")
-        response = requests.get(url, params=HEADERS, timeout=TIMEOUT)
-        failed_tries += 1
-        if failed_tries > MAX_RETRIES:
-            raise err
+    for i in range(MAX_RETRIES):
+        try:
+            response = requests.get(url, params=HEADERS, timeout=TIMEOUT)
+        except requests.exceptions.ConnectionError as err:
+            if i >= MAX_RETRIES - 1:
+                raise err
+            continue
 
-    if response.status_code != 200:
-        return []
-        # raise requests.exceptions.HTTPError("Recieved invalid response while fetching job data possibly invalid id.")
+        soup = BeautifulSoup(response.content, 'lxml')
+        if soup.find("h2", attrs={"class": "top-card-layout__title"}):
+            break
 
-    soup = BeautifulSoup(response.content, 'lxml')
+        if i >= MAX_RETRIES - 1:
+            print(f"Exceeded max retries for \"{id}\" job data.")
+            return [] # don't ask why
+
+        print(f"Retrying scraping \"{id}\" job data.")
 
     def scrape_content(tag: str, class_attr: str, def_val=None, get_href=False):
         content = soup.find(tag, attrs={"class": class_attr})
-
-        if not(content): # not founded
-            return def_val
-
-        return content.get_text(separator="\n").strip()
+        return content.get_text(separator="\n").strip() if content else def_val
 
     def scrape_criteria_item(title: str):
         job_criteria_subheader = soup.find(
@@ -149,17 +151,10 @@ def scrape_job_data(id: JobId) -> Job:
             attrs={"class": "description__job-criteria-subheader"},
             string=lambda text: text and title.lower() in text.lower()
         )
-
-        if not(job_criteria_subheader):
+        if not(job_criteria_subheader) or not(job_criteria_subheader.parent):
             return ""
 
-        parent_item = job_criteria_subheader.parent
-
-        if not(parent_item):
-            return ""
-
-        contents = parent_item.find("span").contents
-
+        contents      = job_criteria_subheader.parent.find("span").contents
         total_content = ""
         for content in contents:
             if isinstance(content, str):
@@ -167,7 +162,7 @@ def scrape_job_data(id: JobId) -> Job:
 
         return total_content
     
-    job = Job(
+    return Job(
         id               = id,
         posting_title    = scrape_content("h2", "top-card-layout__title"),
         location         = scrape_content("span", "topcard__flavor--bullet"),
@@ -184,8 +179,6 @@ def scrape_job_data(id: JobId) -> Job:
         seniority_level  = scrape_criteria_item("Seniority level"),
     )
 
-    return job
-
 def main():
     aggregated_jobs: Dict[str, Dict[str, list[Job]]] = dict()
 
@@ -200,6 +193,7 @@ def main():
             current_page_index = 1
             while current_page_index <= MAX_PAGES:
                 job_ids = search_jobs(country, job_title, current_page_index)
+                print("Scraping the following job ids: ", job_ids)
                 jobs_data = list(map(scrape_job_data, job_ids))
 
                 if len(jobs_data) == 0:
@@ -213,7 +207,7 @@ def main():
 
 
     date = datetime.today().strftime('%Y_%m_%d')
-    with open(f"../data/linkedin_jobs_{date}.csv", "w") as f:
+    with open(f"{DATA_DIRECTORY}/linkedin_jobs_{date}.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
 

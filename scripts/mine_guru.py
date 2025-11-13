@@ -33,15 +33,18 @@ CSV_FIELDNAMES = [
     "description",
     "searched_job_title"
 ]
-MAX_PAGES   = 12 # by default it's 20 freelancers per page so 12 is more than enough
-CHROMIUM_VERSION=141
-TIMEOUT     = 60
-GURU_TIMEOUT = 60 # seconds
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0',
     'Accept-Encoding': '*',
     'Connection': 'keep-alive',
 }
+
+DATA_DIRECTORY = "./data" # dot here is the root dir of the project
+MAX_PAGES   = 1 # by default it's 20 freelancers per page so 12 is more than enough
+CHROMIUM_VERSION=141
+TIMEOUT     = 60
+GURU_TIMEOUT = 60 # seconds
+
 
 class Freelancer(NamedTuple):
     url: str
@@ -142,7 +145,6 @@ def main():
         while current_page <= MAX_PAGES:
             driver.get(f"https://www.guru.com/d/freelancers/skill/{job_title}/pg/{current_page}/")
             urls = scrape_freelancers_urls(driver)
-            print(urls)
             for url in urls:
                 driver.get(url)
                 aggregated_freelancers[job_title].append(
@@ -153,7 +155,7 @@ def main():
         print(f"Scraped {len(aggregated_freelancers[job_title])} freelancers.\n")
 
     date = datetime.today().strftime('%Y_%m_%d')
-    with open(f"../data/guru_freelancers_{date}.csv", "w") as f:
+    with open(f"{DATA_DIRECTORY}/guru_freelancers_{date}.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
         

@@ -31,9 +31,11 @@ CSV_FIELDNAMES = [
     "fixed_jobs_done",
     "searched_job_title",
 ]
+
+DATA_DIRECTORY = "./data"
 CHROMIUM_VERSION = 141  # Adjust as needed
 UPWORK_TIMEOUT = 90
-MAX_PAGES = 16
+MAX_PAGES = 15
 START_PAGE = 15
 
 class Freelancer(NamedTuple):
@@ -180,7 +182,7 @@ def main():
 
     # Saving the data
     date = datetime.today().strftime('%Y_%m_%d')
-    with open(f"../data/upwork_freelancers_{date}.csv", "w") as f:
+    with open(f"{DATA_DIRECTORY}/upwork_freelancers_{date}.csv", "w") as f:
         writer = csv.DictWriter(f, CSV_FIELDNAMES)
         writer.writerow(dict(zip(CSV_FIELDNAMES, CSV_FIELDNAMES))) # frist row is for column names
 
