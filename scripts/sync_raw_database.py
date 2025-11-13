@@ -4,8 +4,8 @@ import pandas as pd
 import glob
 from pathlib import Path
 
-DATABASE_PATH = "../data/raw_database.db"
-FILES_PATTERN = "../data/[linkedin,upwork,guru]*.csv"
+DATABASE_PATH = "./data/raw_database.db"
+FILES_PATTERN = "./data/[linkedin,upwork,guru]*.csv"
 
 def get_table_name(csv_filename):
     return f"{Path(csv_filename).stem}"

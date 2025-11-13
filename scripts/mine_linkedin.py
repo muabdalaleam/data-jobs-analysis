@@ -37,7 +37,7 @@ HEADERS     = {
 }
 
 DATA_DIRECTORY = "./data"
-MAX_PAGES   = 2 # per job title and country each page containts 10 jobs
+MAX_PAGES   = 13 # per job title and country each page containts 10 jobs
 MAX_RETRIES = 6
 TIMEOUT     = 60
 COUNTRIES   = ['European Union', 'United States']

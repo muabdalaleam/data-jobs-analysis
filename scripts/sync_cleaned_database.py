@@ -15,11 +15,11 @@ import re
 import os
 
 
-RAW_DB_URI = "file:../data/raw_database.db?mode=ro" # XXX
-CLEAN_DB_PATH = "../data/clean_database.db"
+RAW_DB_URI = "file:./data/raw_database.db?mode=ro" # XXX
+CLEAN_DB_PATH = "./data/clean_database.db"
 QA_MODEL_NAME     = "deepset/tinyroberta-squad2"
-QA_MODEL_PATH     = "../models/tinyroberta-squad2-model"
-QA_TOKENIZER_PATH = "../models/tinyroberta-squad2-tokenizer"
+QA_MODEL_PATH     = "./models/tinyroberta-squad2-model"
+QA_TOKENIZER_PATH = "./models/tinyroberta-squad2-tokenizer"
 
 with sqlite3.connect(RAW_DB_URI, uri=True) as con:
     # hardcoded i know and don't give a shit
