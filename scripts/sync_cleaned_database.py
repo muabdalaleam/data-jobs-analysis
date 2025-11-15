@@ -1,8 +1,15 @@
+# This file was converted from "/notebooks/cleaning.ipynb" then modefied  so 
+# don't expect it to be that clean
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
+from transformers import (
+    AutoModelForQuestionAnswering,
+    AutoTokenizer,
+    pipeline
+)
 from datetime import datetime, timedelta, date
 from typing import Optional, Tuple, List
 from IPython.display import display, Markdown
@@ -192,7 +199,6 @@ salary_ranges = linkedin_df["description"].apply(extract_and_update_progress)
 linkedin_df["salary_min"] = salary_ranges.apply(lambda x: list(x)[0] if x is not None else x)
 linkedin_df["salary_max"] = salary_ranges.apply(lambda x: list(x)[1] if x is not None else x)
 
-
 # Seperating hour pays from annaul salaries
 linkedin_df["pay_type"] = linkedin_df["salary_min"].apply(
     lambda s: None if np.isnan(s) else "Hourly" if s < 200 else "Annually"
@@ -262,7 +268,6 @@ def extract_skills(desc: str) -> List[str]:
 linkedin_df["skills"] = linkedin_df["description"].apply(
     lambda s: ",".join(extract_skills(s))
 )
-
 
 # Extracting the required education from the job descriptions using the same model
 def extract_required_education(desc: str) -> str:

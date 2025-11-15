@@ -18,10 +18,11 @@ def main():
     
     os.makedirs(os.path.dirname(DATABASE_PATH), exist_ok=True)
     conn = sqlite3.connect(DATABASE_PATH)
-    
+
     for csv_file in csv_files:
         df = pd.read_csv(csv_file)
         table_name = get_table_name(os.path.basename(csv_file))
+
         try:
             df.to_sql(table_name, conn, if_exists='fail', index=False)
             print("Created a new table: ", csv_file)
