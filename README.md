@@ -4,7 +4,7 @@
 
 ![Chart showing most common data-field jobs in the E.U & USA maps (coolest chart I've done)](https://github.com/muabdalaleam/data-jobs-analysis/blob/main/screenshot.jpg?raw=true)
 
-An inspection into the current market of data-field jobs *(data analysis, data science, ML development & data engineering)*
+An inspection into the current market of data-field jobs & freelancing *(data analysis, data science, ML development & data engineering)*
 by looking into LinkedIn job postings and freelancers accounts on UpWork & Guru. hopefully we 
 
 ---
@@ -15,8 +15,8 @@ by looking into LinkedIn job postings and freelancers accounts on UpWork & Guru.
 - [Kaggle dataset](https://example.com)*
 - [Job postings analysis notebook](https://example.com)
 - [Freelancers analysis notebook](https://example.com)
-<br>
-*: the kaggle dataset is mine for more look [here](##Dataset)
+
+* the kaggle dataset is mine for more look [here](#dataset)
 
 # Reproducing
 
@@ -68,4 +68,14 @@ You can re execute any of the project's notebooks either using the
 - [Data-field freelacing analysis]()
 - [Data-field jobs analysis]()
 - [Cleaning raw data notebook]()
+
+## Interactive report
+
+The interactive report is available as a github page [here](https://example.cm) but if you want to host it your self 
+here are the steps:
+
+- Make sure you have `data/clean_database.db`
+- Activate your venv and execute `python scripts/sync_dashboard_database.py`
+- Now you should have `dashboard/data/linkedin.json` & `dashboard/data/upwork.json`
+- Initiate a local server at `localhost:5000` by running `python ./dashboard/app.py`
 
