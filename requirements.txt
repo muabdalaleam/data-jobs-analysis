@@ -1,18 +1,19 @@
 # this was done in Python 3.12.11
 
-jupyter
+jupyter==1.1.1
 
-bs4
-requests
-selenium
-undetected-chromedriver
+beautifulsoup4==4.13.1
+requests==2.32.5
+transformers==4.65.1
+selenium==4.35.0
+undetected-chromedriver==3.5.5
 
-pandas
-numpy
-duckdb
-scipy # should remove this in the future
+pandas==2.3.2
+numpy==2.3.2
+duckdb==1.4.0
+scipy==1.16.2 # should remove this in the future
 
-matplotlib
-seaborn
-pywaffle
-Cartopy
+matplotlib==3.10.5
+seaborn==0.13.2
+pywaffle==1.1.1
+Cartopy==0.25.0
