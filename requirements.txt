@@ -1,31 +1,18 @@
+# this was done in Python 3.12.11
+
+jupyter
+
 bs4
+requests
 selenium
+undetected-chromedriver
+
 pandas
 numpy
-seaborn
-matplotlib
-cloudscraper
+duckdb
+scipy # should remove this in the future
 
-# bs4
-# numpy
-# pandas
-# lxml
-# pandasql 
-# webdriver-manager
-# matplotlib
-# seaborn
-# gunicorn
-# python-dotenv
-# plotly
-# pyarrow
-# html5lib
-# squarify
-# dash
-# db-dtypes
-# google
-# scrapy
-# google-cloud-bigquery
-# hsluv
-# wordcloud
-# shapely
-# db-dtypes
+matplotlib
+seaborn
+pywaffle
+Cartopy
