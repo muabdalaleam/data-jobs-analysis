@@ -21,6 +21,7 @@ engineering)* by looking into LinkedIn job postings and freelancers accounts on 
 # Reproducing
 
 There's no need to reproduce the project if you just want to see it the results [quick links](#quick-links) should be enough
+but if you want to see how it works and how it was made follow the steps below:
 
 ## Setup
 
@@ -65,7 +66,8 @@ And that's it if you any time wanted to update your data repeat all the steps we
 
 ## Notebooks
 
-You can execute any of the project's notebooks locally or just view them from the web viewer in the links below
+You can execute any of the project's notebooks locally in the `notebooks` directory or just view them from the web viewer
+in the links below
 
 - [Data-field jobs analysis](https://nbviewer.org/github/muabdalaleam/data-jobs-analysis/blob/main/notebooks/jobs_analysis.ipynb)
 - [Data-field freelacing analysis](https://nbviewer.org/github/muabdalaleam/data-jobs-analysis/blob/main/notebooks/freelancers_analysis.ipynb)
@@ -81,6 +83,23 @@ here are the steps:
 - Now you should have `dashboard/data/linkedin.json` & `dashboard/data/upwork.json`
 - Initiate a local server at `localhost:5000` by running `python ./dashboard/app.py`
 
-# Analysis conclusion
+# Analysis findings
 
-Here is a summary of the notebooks & the interactive report
+Here are some cool findings from the notebooks & the interactive report for more you can either look at the
+[notebooks](#notebooks) or the [pdf reports](https://github.com/muabdalaleam/data-jobs-analysis/tree/main/reports).
+
+- Over 50% of postings do not specify a degree requirement, indicating that many companies
+are flexible about formal education, relying instead on skills and experience.
+
+- Machine learning roles show strong demand for both junior and senior levels unlike Data analyst
+roles which are less open to entry-level candidates, also we can see that data engineering roles
+are the most demanding for senior roles.
+
+- Most paid skills in job postings are the data engineering, or ML skills such as C++, PyTorch,
+TensorFlow & R language
+
+- Data engineers earn the highest amount per job, ML freelancers earn about half as much per job
+as data engineers. time or effort per job is unknown, so earnings per job should not be interpreted
+as earnings per hour.
+
+### Thanks for looking into my project ❤️
