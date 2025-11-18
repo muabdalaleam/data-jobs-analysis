@@ -111,7 +111,9 @@ function drawSkillsScatter(jobsData) {
 		let skills = skills_str.split(",")
 
 		skills.forEach((skill) => {
+			if (skill == "") return
 			if (!(skill in data)) data[skill] = {"x": 0, "y": []} // the y array should be converted into a number
+
 			data[skill]["x"] += 1
 			data[skill]["y"].push(jobsData["salary"][i]) // this must be devided later to get the mean
 		})
