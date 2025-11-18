@@ -249,8 +249,8 @@ skills = [
     "nlp",
 
     # General Skills
-    "excel", "vba", "regex", "json", "xml", "yaml", "parquet", " orc", "avro",
-    "api", " rest ", "grpc", "graphql",
+    "excel", "vba", "regex", "json", "xml", "yaml", "parquet", " orc,", "avro",
+    "api", " rest ", "grpc", "graphql"," orc ",
 
     # Soft Skills / Business
     "communication", "storytelling", "problem solving",
