@@ -11,12 +11,13 @@ engineering)* by looking into LinkedIn job postings and freelancers accounts on 
 
 # Quick links
 
-- [Interactive report](https://example.com)
+- [Interactive report](https://muabdalaleam.github.io/data-jobs-analysis/)
+- [Job postings analysis notebook](https://nbviewer.org/github/muabdalaleam/data-jobs-analysis/blob/main/notebooks/jobs_analysis.ipynb)
+- [Freelancers analysis notebook](https://nbviewer.org/github/muabdalaleam/data-jobs-analysis/blob/main/notebooks/freelancers_analysis.ipynb)
 - [Kaggle dataset](https://example.com)*
-- [Job postings analysis notebook](https://example.com)
-- [Freelancers analysis notebook](https://example.com)
+- [Analysis PDF reports](https://github.com/muabdalaleam/data-jobs-analysis/tree/main/reports)
 
-* the kaggle dataset is mine for more look [here](#dataset)
+*: the kaggle dataset is mine for more look [here](#dataset)
 
 # Reproducing
 
@@ -75,7 +76,7 @@ in the links below
 
 ## Interactive report
 
-The interactive report is available as a github page [here](https://example.cm) but if you want to host it your self 
+The interactive report is available as a github page [here](https://muabdalaleam.github.io/data-jobs-analysis/) but if you want to host it your self 
 here are the steps:
 
 - Make sure you have `data/clean_database.db`
