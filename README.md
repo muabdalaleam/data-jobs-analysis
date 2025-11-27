@@ -14,7 +14,7 @@ engineering)* by looking into LinkedIn job postings and freelancers accounts on 
 - [Interactive report](https://muabdalaleam.github.io/data-jobs-analysis/)
 - [Job postings analysis notebook](https://nbviewer.org/github/muabdalaleam/data-jobs-analysis/blob/main/notebooks/jobs_analysis.ipynb)
 - [Freelancers analysis notebook](https://nbviewer.org/github/muabdalaleam/data-jobs-analysis/blob/main/notebooks/freelancers_analysis.ipynb)
-- [Kaggle dataset](https://example.com)*
+- [Kaggle dataset](https://www.kaggle.com/datasets/muhammedelsayegh/data-jobs-analysis-db/data)*
 - [Analysis PDF reports](https://github.com/muabdalaleam/data-jobs-analysis/tree/main/reports)
 
 *: the kaggle dataset is mine for more look [here](#dataset)
@@ -37,7 +37,7 @@ Now you are done setting up the Python virtual environment for the project.
 
 ## Dataset
 
-You can either download the dataset I made from [Kaggle](example.com#example.com#example.com#example.com) into `data` dir
+You can either download the dataset I made from [Kaggle](https://www.kaggle.com/datasets/muhammedelsayegh/data-jobs-analysis-db/data) into `data` dir
 or run the scripts needed to collect the data yourself into the `data` dir.
 
 The data used in this project was collected using mining scripts in the `scripts` directory which are executed on various
